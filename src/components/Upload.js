@@ -44,6 +44,7 @@ const Upload = () => {
 
     var data = new FormData();
     data.append("imageUpload", file);
+    data.append("authorName", "Lemontopia"); //CHANGE THIS TO VARIABLE AFTER AUTH ADDED
 
     axios
       .post("http://localhost:5000/api", data, {

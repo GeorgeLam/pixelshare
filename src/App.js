@@ -1,12 +1,14 @@
 import React from "react";
 import "./App.css";
 
-import Upload from "./Upload";
+import Upload from "./components/Upload";
+import Image from "./components/Image";
 
 function App() {
   return (
     <div>
       <Upload />
+      <Image />
     </div>
   );
 }
