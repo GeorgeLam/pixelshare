@@ -1,0 +1,9 @@
+.card {
+  width: 35rem;
+}
+
+.username,
+.profilePhoto {
+  font-weight: 500;
+  cursor: pointer;
+}
