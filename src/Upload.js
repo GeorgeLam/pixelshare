@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Upload = () => {
   console.log("up");
   const data = { hello: "here it is" };
   const [file, setFile] = useState();
+  const [loaded, setLoaded] = useState();
+  const [recentFile, setRecentFile] = useState();
 
   const upload = async (e) => {
     e.preventDefault();
@@ -22,11 +24,18 @@ const Upload = () => {
       .post("http://localhost:5000/api", e.target.files[0])
       .then(function (response) {
         console.log(response);
+        // setRecentFile(response.location);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+
+  //   const showImg = (src) => {
+  //     console.log(src);
+  //     setRecentFile(src);
+  //     setLoaded(true);
+  //   };
 
   const handleUpload = (e) => {
     e.preventDefault();
@@ -44,12 +53,23 @@ const Upload = () => {
           "Access-Control-Allow-Origin": "*",
         },
       })
-      .then((response) => console.log(response.data))
+      .then((response) => {
+        console.log(response.data);
+        setTimeout(() => {
+          setLoaded(response.data.location);
+        }, 2000);
+      })
 
       .catch(function (error) {
         console.log(error);
       });
   };
+
+  //   useEffect(() => {
+  //     if (loaded) {
+  //       setRecentFile(loaded);
+  //     }
+  //   }, [loaded]);
 
   return (
     <div>
@@ -76,6 +96,13 @@ const Upload = () => {
               </div>
               <button className="btn btn-success">Upload</button>
             </form>
+            <p>Hello</p>
+            {loaded && (
+              <>
+                <p>Salad</p>
+                <img src={loaded}></img>
+              </>
+            )}
           </div>
         </div>
       </div>
