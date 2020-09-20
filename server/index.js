@@ -18,6 +18,8 @@ app.use(cors());
 
 const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //Multer start
 // const storage = multer.diskStorage({
@@ -77,6 +79,15 @@ app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
   res.send({
     location: "https://pixelshare.s3.eu-west-2.amazonaws.com/" + fileName,
   });
+});
+
+app.post("/signup", function (req, res) {
+  console.log(req.body); //WORKS!!
+  // console.log(req.body.username);
+  // console.log("a", JSON.parse(req.body));
+  // console.log("b", req.body.json());
+  // console.log(req);
+  res.send({ Response: req.body.username });
 });
 
 //AWS Start

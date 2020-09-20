@@ -60,8 +60,15 @@ const Layout = ({ children }) => {
                   >
                     Home
                   </NavLink>
-                  <NavLink to="/upload" activeClassName="mr-3 font-weight-bold">
+                  <NavLink
+                    to="/upload"
+                    className="mr-3"
+                    activeClassName="mr-3 font-weight-bold"
+                  >
                     Upload
+                  </NavLink>
+                  <NavLink to="/login" activeClassName="mr-3 font-weight-bold">
+                    Login
                   </NavLink>
                 </Row>
               </Nav>
@@ -73,10 +80,14 @@ const Layout = ({ children }) => {
       </Navbar>
 
       <div
-        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "calc(100vh - 22px)",
+        }}
       >
         <div style={{ flex: 1 }}>
-          <Row>
+          <Row className="h-100">
             <Col className="mt-5">{children}</Col>
           </Row>
         </div>
