@@ -11,7 +11,6 @@ const Home = () => {
         <Row>
           <Col xs={12} md={6} className="mx-auto">
             <Image />
-            <Image />
           </Col>
         </Row>
       </Container>

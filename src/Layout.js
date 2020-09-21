@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import PropTypes from "prop-types";
 // import { useStaticQuery, graphql, Link } from "gatsby";
 import {
@@ -7,7 +7,10 @@ import {
   Route,
   Link,
   NavLink,
+  useHistory,
 } from "react-router-dom";
+
+import { auth, firestore } from "./firebase";
 
 // import { Helmet } from "react-helmet";
 
@@ -26,6 +29,32 @@ import {
 } from "react-bootstrap/";
 
 const Layout = ({ children }) => {
+  let history = useHistory();
+
+  const [username, setUsername] = useState(null);
+
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      setUsername(user);
+      console.log("User currently logged in", user);
+    } else {
+      console.log("Not logged in");
+    }
+  });
+
+  const handleLogOut = () => {
+    auth
+      .signOut()
+      .then(function () {
+        setUsername(null);
+        console.log("You were logged out...");
+        history.push("/");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       {/* <Helmet title="Better Latte Coffee" defer={false} /> */}
@@ -67,9 +96,18 @@ const Layout = ({ children }) => {
                   >
                     Upload
                   </NavLink>
-                  <NavLink to="/login" activeClassName="mr-3 font-weight-bold">
-                    Login
-                  </NavLink>
+                  {username ? (
+                    <Link to="#" onClick={handleLogOut}>
+                      Log out {`(${username?.displayName})`}
+                    </Link>
+                  ) : (
+                    <NavLink
+                      to="/login"
+                      activeClassName="mr-3 font-weight-bold"
+                    >
+                      Login
+                    </NavLink>
+                  )}
                 </Row>
               </Nav>
             </Navbar.Collapse>

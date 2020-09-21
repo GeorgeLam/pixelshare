@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { auth, firestore } from "../firebase";
 
 import Layout from "../Layout";
 
 const Upload = () => {
+  const [username, setUsername] = useState(null);
+
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      setUsername(user);
+      console.log("User currently logged in", user);
+    } else {
+      console.log("Not logged in");
+    }
+  });
+
   console.log("up");
   const data = { hello: "here it is" };
   const [file, setFile] = useState();
@@ -46,7 +58,7 @@ const Upload = () => {
 
     var data = new FormData();
     data.append("imageUpload", file);
-    data.append("authorName", "Lemontopia"); //CHANGE THIS TO VARIABLE AFTER AUTH ADDED
+    data.append("authorName", username.displayName);
 
     axios
       .post("http://localhost:5000/api", data, {
@@ -80,32 +92,38 @@ const Upload = () => {
         <div className="container mt-3">
           <div className="row">
             <div className="col-md-6 mx-auto">
-              <form
-                method="post"
-                action="http://localhost:5000/api"
-                encType="multipart/form-data"
-                id="#"
-                onSubmit={handleUpload}
-              >
-                <div className="form-group files">
-                  <label onClick={upload}>Upload Your File </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    name="file"
-                    multiple=""
-                    onChange={upload}
-                    accept=".jpg, .jpeg, .png"
-                  ></input>
-                </div>
-                <button className="btn btn-success">Upload</button>
-              </form>
-              <p>Hello</p>
-              {loaded && (
+              {username ? (
                 <>
-                  <p>Salad</p>
-                  <img src={loaded}></img>
+                  <form
+                    method="post"
+                    action="http://localhost:5000/api"
+                    encType="multipart/form-data"
+                    id="#"
+                    onSubmit={handleUpload}
+                  >
+                    <div className="form-group files">
+                      <label onClick={upload}>Upload Your File </label>
+                      <input
+                        type="file"
+                        className="form-control"
+                        name="file"
+                        multiple=""
+                        onChange={upload}
+                        accept=".jpg, .jpeg, .png"
+                      ></input>
+                    </div>
+                    <button className="btn btn-success">Upload</button>
+                  </form>
+                  <p>Hello</p>
+                  {loaded && (
+                    <>
+                      <p>Salad</p>
+                      <img src={loaded}></img>
+                    </>
+                  )}
                 </>
+              ) : (
+                "You must log in first!"
               )}
             </div>
           </div>

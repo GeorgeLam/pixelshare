@@ -2,12 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 
 import axios from "axios";
 import { auth, firebase } from "../firebase";
+import { useHistory } from "react-router-dom";
 
 import { Card, Button, Form } from "react-bootstrap/";
 import ImageStyles from "../styles/image.module.css";
 
 const SignUp = () => {
+  let history = useHistory();
+
   const [email, setEmail] = useState();
+  const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const [passwordConfirm, setPasswordConfirm] = useState();
 
@@ -29,6 +33,9 @@ const SignUp = () => {
 
   const handleEmailInput = (e) => {
     setEmail(e.target.value);
+  };
+  const handleUsernameInput = (e) => {
+    setUsername(e.target.value);
   };
   const handlePasswordInput = (e) => {
     setPassword(e.target.value);
@@ -57,6 +64,15 @@ const SignUp = () => {
   const signUp = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
+      .then((res) => {
+        return auth.currentUser.updateProfile({
+          displayName: username,
+        });
+      })
+      .then(function () {
+        console.log("Logged in...");
+        history.push("/");
+      })
       .catch(function (error) {
         console.log(error);
       });
@@ -82,6 +98,16 @@ const SignUp = () => {
                 onChange={handleEmailInput}
                 type="email"
                 placeholder="Enter email"
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                defaultValue={username}
+                onChange={handleUsernameInput}
+                type="username"
+                placeholder="Enter username"
               />
             </Form.Group>
 

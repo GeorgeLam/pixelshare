@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
 
 import axios from "axios";
 import { auth, firestore } from "../firebase";
@@ -7,6 +8,8 @@ import { Card, Button, Form } from "react-bootstrap/";
 import ImageStyles from "../styles/image.module.css";
 
 const SignIn = () => {
+  let history = useHistory();
+
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
@@ -21,12 +24,19 @@ const SignIn = () => {
   };
 
   const signIn = () => {
-    auth.signInWithEmailAndPassword(email, password).catch(function (error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
-    });
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(function () {
+        console.log("Logged in...");
+        history.push("/");
+      })
+      .catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(error);
+        // ...
+      });
   };
 
   return (

@@ -55,7 +55,7 @@ app.get("/photos", function (req, res) {
         .collection("photos")
         .find()
         .sort({ uploadTime: -1 })
-        .limit(1)
+        .limit(3)
         .toArray()
         .then((docs) => {
           console.log(docs);
