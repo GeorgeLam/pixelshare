@@ -7,6 +7,8 @@ const path = require("path");
 const AWS = require("aws-sdk");
 const fs = require("fs");
 const { MongoClient } = require("mongodb");
+const bcrypt = require("bcrypt");
+
 // const image = require("../models/models");
 
 require("dotenv").config();
@@ -83,11 +85,28 @@ app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
 
 app.post("/signup", function (req, res) {
   console.log(req.body); //WORKS!!
-  // console.log(req.body.username);
-  // console.log("a", JSON.parse(req.body));
-  // console.log("b", req.body.json());
-  // console.log(req);
   res.send({ Response: req.body.username });
+  bcrypt.hash(req.body.password, 10, function (err, hash) {
+    if (err) console.log(err);
+    console.log(hash);
+  });
+});
+
+app.post("/login", function (req, res) {
+  console.log(req.body); //WORKS!!
+  // res.send({ Response: req.body.username });
+  bcrypt.compare(
+    req.body.password,
+    /////////////,
+    function (err, result) {
+      // result == true
+      if (err) console.log(err);
+      else {
+        console.log(result);
+        res.send(result);
+      }
+    }
+  );
 });
 
 //AWS Start

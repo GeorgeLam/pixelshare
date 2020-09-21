@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import axios from "axios";
+import { auth, firebase } from "../firebase";
 
 import { Card, Button, Form } from "react-bootstrap/";
 import ImageStyles from "../styles/image.module.css";
 
 const SignUp = () => {
-  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [passwordConfirm, setPasswordConfirm] = useState();
 
@@ -26,8 +27,8 @@ const SignUp = () => {
   //       });
   //   }, []);
 
-  const handleUsernameInput = (e) => {
-    setUsername(e.target.value);
+  const handleEmailInput = (e) => {
+    setEmail(e.target.value);
   };
   const handlePasswordInput = (e) => {
     setPassword(e.target.value);
@@ -40,14 +41,22 @@ const SignUp = () => {
       alert("Passwords do not match!");
       return;
     }
-    const details = { username, password, passwordConfirm };
+    const details = { email, password, passwordConfirm };
     // console.log(details);
-    console.log("Signing up...", username, password, passwordConfirm);
-    axios
-      .post("http://localhost:5000/signup", details)
-      .then(function (response) {
-        console.log(response.data);
-      })
+    console.log("Signing up...", email, password);
+    // axios
+    //   .post("http://localhost:5000/signup", details)
+    //   .then(function (response) {
+    //     console.log(response.data);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+  };
+
+  const signUp = () => {
+    auth
+      .createUserWithEmailAndPassword(email, password)
       .catch(function (error) {
         console.log(error);
       });
@@ -66,13 +75,13 @@ const SignUp = () => {
         </Card.Header>
         <Card.Body>
           <Form className="mx-auto mb-3" style={{ width: "80%" }}>
-            <Form.Group controlId="formUsername">
-              <Form.Label>Username</Form.Label>
+            <Form.Group controlId="formEmail">
+              <Form.Label>Email</Form.Label>
               <Form.Control
-                defaultValue={username}
-                onChange={handleUsernameInput}
-                type="username"
-                placeholder="Enter username"
+                defaultValue={email}
+                onChange={handleEmailInput}
+                type="email"
+                placeholder="Enter email"
               />
             </Form.Group>
 
@@ -100,7 +109,7 @@ const SignUp = () => {
               variant="primary"
               type="button"
               className="w-100"
-              onClick={handleSignUp}
+              onClick={signUp}
             >
               Submit
             </Button>
