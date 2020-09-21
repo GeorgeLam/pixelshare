@@ -44,29 +44,56 @@ var upload = multer({ storage: storage });
 //Multer end
 
 // ROUTES
-app.get("/photos", function (req, res) {
+app.post("/photos", function (req, res) {
   // res.sendFile("/index.html", { root: "./server" });
+  let query = null;
+  if (req.body.user) {
+    console.log(req.body.user);
+    requestingUser = req.body.user;
+    query = { author: requestingUser };
 
-  MongoClient.connect(process.env.DB_Conn, async function (err, db) {
-    if (err) throw err;
-    try {
-      await db
-        .db("Pixelshare")
-        .collection("photos")
-        .find()
-        .sort({ uploadTime: -1 })
-        .limit(3)
-        .toArray()
-        .then((docs) => {
-          console.log(docs);
-          res.send(docs);
-        });
-      db.close();
-    } catch (err) {
-      console.log(err);
-      res.json({ msg: err });
-    }
-  });
+    MongoClient.connect(process.env.DB_Conn, async function (err, db) {
+      if (err) throw err;
+      try {
+        await db
+          .db("Pixelshare")
+          .collection("photos")
+          .find({ author: requestingUser })
+          .sort({ uploadTime: -1 })
+          .limit(3)
+          .toArray()
+          .then((docs) => {
+            console.log(docs);
+            res.send(docs);
+          });
+        db.close();
+      } catch (err) {
+        console.log(err);
+        res.json({ msg: err });
+      }
+    });
+  } else {
+    MongoClient.connect(process.env.DB_Conn, async function (err, db) {
+      if (err) throw err;
+      try {
+        await db
+          .db("Pixelshare")
+          .collection("photos")
+          .find()
+          .sort({ uploadTime: -1 })
+          .limit(3)
+          .toArray()
+          .then((docs) => {
+            console.log(docs);
+            res.send(docs);
+          });
+        db.close();
+      } catch (err) {
+        console.log(err);
+        res.json({ msg: err });
+      }
+    });
+  }
 });
 
 app.post("/api", upload.single("imageUpload"), async function (req, res, next) {

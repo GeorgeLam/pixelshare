@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { BrowserRouter as Router, Link } from "react-router-dom";
 import axios from "axios";
 
 import Card from "react-bootstrap/Card";
@@ -13,7 +13,7 @@ const Image = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/photos")
+      .post("http://localhost:5000/photos")
       .then((response) => {
         console.log(response.data);
         setRecentPhotos(response.data);
@@ -41,13 +41,18 @@ const Image = () => {
                 width="30"
                 height="30"
               ></img>
-              <span className={ImageStyles.username}>{photo.author}</span>
+              <Link
+                to={`/user/${photo.author}`}
+                className={ImageStyles.username}
+              >
+                {photo.author}
+              </Link>
             </Card.Header>
             <Card.Img
               variant="top"
               src={aws + photo.fileName}
               // src={require("./1.jpg")}
-              //   alt={`Photo uploaded by ${photo.author}`}
+              alt={`Photo uploaded by ${photo.author}`}
             />
             <Card.Body>
               <Card.Text>
