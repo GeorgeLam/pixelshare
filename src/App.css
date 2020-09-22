@@ -54,3 +54,24 @@
   text-transform: capitalize;
   text-align: center;
 }
+
+.fade.modal.show {
+  width: 100% !important;
+  padding: 0;
+}
+
+.modal-content {
+  border: 0;
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 70%;
+  }
+}
+
+@media (min-width: 992px) {
+  .modal-dialog {
+    max-width: 50%;
+  }
+}

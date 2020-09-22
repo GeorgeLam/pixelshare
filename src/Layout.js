@@ -33,6 +33,7 @@ const Layout = ({ children }) => {
 
   const [username, setUsername] = useState(null);
 
+  // const authCheck =
   auth.onAuthStateChanged(function (user) {
     if (user) {
       setUsername(user);
@@ -130,7 +131,7 @@ const Layout = ({ children }) => {
           </Row>
         </div>
 
-        <Navbar bg="light" expand="lg">
+        <Navbar bg="light">
           <Container>
             <Row className="mx-auto">
               <Col>
