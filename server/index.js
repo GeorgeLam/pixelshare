@@ -43,14 +43,15 @@ var upload = multer({ storage: storage });
 
 //Multer end
 
-// ROUTES
+// ROUTES: Fetching photo data
 app.post("/photos", function (req, res) {
   // res.sendFile("/index.html", { root: "./server" });
   let query = null;
-  if (req.body.user) {
-    console.log(req.body.user);
-    requestingUser = req.body.user;
-    query = { author: requestingUser };
+  if (req.body) {
+    console.log(req.body);
+    if (req.body.queryType == "recent") query = {};
+    if (req.body.queryType == "user") query = { author: req.body.author };
+    if (req.body.queryType == "single") query = { fileName: req.body.fileName };
 
     MongoClient.connect(process.env.DB_Conn, async function (err, db) {
       if (err) throw err;
@@ -58,28 +59,7 @@ app.post("/photos", function (req, res) {
         await db
           .db("Pixelshare")
           .collection("photos")
-          .find({ author: requestingUser })
-          .sort({ uploadTime: -1 })
-          .limit(3)
-          .toArray()
-          .then((docs) => {
-            console.log(docs);
-            res.send(docs);
-          });
-        db.close();
-      } catch (err) {
-        console.log(err);
-        res.json({ msg: err });
-      }
-    });
-  } else {
-    MongoClient.connect(process.env.DB_Conn, async function (err, db) {
-      if (err) throw err;
-      try {
-        await db
-          .db("Pixelshare")
-          .collection("photos")
-          .find()
+          .find(query)
           .sort({ uploadTime: -1 })
           .limit(3)
           .toArray()
@@ -96,6 +76,50 @@ app.post("/photos", function (req, res) {
   }
 });
 
+//Route: updating
+
+app.post("/photoUpdate", function (req, res) {
+  // res.sendFile("/index.html", { root: "./server" });
+  let query = null;
+  if (req.body) {
+    // console.log(req.body);
+    // console.log("!!!!!", req.body.currentUser);
+    // if (req.body.queryType == "like") query = {};
+
+    // if (1) command = { $addToSet: { likes: "fsjfd" } };
+    req.body.likeStatus
+      ? (command = { $pull: { likes: req.body.currentUser } })
+      : (command = { $addToSet: { likes: req.body.currentUser } });
+
+    MongoClient.connect(process.env.DB_Conn, async function (err, db) {
+      if (err) throw err;
+      try {
+        await db
+          .db("Pixelshare")
+          .collection("photos")
+          .findOneAndUpdate(
+            {
+              fileName: req.body.fileName,
+              // likes: { $nin: [req.body.currentUser] },
+            },
+            command,
+            // $addToSet: { likes: req.body.currentUser },
+            { returnOriginal: false }
+          )
+          .then((docs) => {
+            console.log("zzzzz", docs.value);
+            res.send(docs.value);
+          });
+        db.close();
+      } catch (err) {
+        console.log("ERRRRRRRRRRRRRR", err);
+        res.json({ msg: err });
+      }
+    });
+  }
+});
+
+//Route: uploading
 app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
   console.log("Node has received something...");
   // console.log("!!!!!!!!!!!!!!!!!!!", req.body);

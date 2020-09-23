@@ -18,6 +18,18 @@ const PhotoPage = ({ match }) => {
   const [show, setShow] = useState(false);
   // const recentPhotos = ["../img/1.jpg"];
 
+  useEffect(() => {
+    axios
+      .post("http://localhost:5000/photos/", { queryType: "single", fileName })
+      .then((response) => {
+        console.log(response.data);
+        setRecentPhotos(response.data[0]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <Layout>
       <Container>
@@ -32,7 +44,7 @@ const PhotoPage = ({ match }) => {
                 borderRadius: 0,
               }}
             >
-              <ImageContents data={aws + fileName} />
+              {recentPhotos && <ImageContents data={recentPhotos} />}
             </div>
           </Col>
         </Row>

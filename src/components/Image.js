@@ -6,6 +6,7 @@ import { format, render, cancel, register } from "timeago.js";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ImageHeader from "./ImageHeader";
+import ImageControls from "./ImageControls";
 
 import ImageStyles from "../styles/image.module.css";
 
@@ -16,7 +17,7 @@ const Image = () => {
 
   useEffect(() => {
     axios
-      .post("http://localhost:5000/photos")
+      .post("http://localhost:5000/photos", { queryType: "recent" })
       .then((response) => {
         console.log(response.data);
         setRecentPhotos(response.data);
@@ -29,9 +30,9 @@ const Image = () => {
   return (
     <div>
       {recentPhotos ? (
-        recentPhotos?.map((photo) => (
+        recentPhotos?.map((photo, idx) => (
           <Card
-            //   key={photo._id}
+            key={photo._id}
             style={{ width: "100%" }}
             // className={ImageStyles.card}
             className="my-5"
@@ -47,8 +48,9 @@ const Image = () => {
               style={{ maxHeight: 500, objectFit: "cover" }}
             />
             <Card.Body>
+              <ImageControls data={photo} />
+
               <Card.Text>
-                No likes yet.
                 <br /> See all comments.
                 <br />
                 <span style={{ fontSize: 10 }}>
@@ -58,7 +60,7 @@ const Image = () => {
                 </span>
               </Card.Text>
             </Card.Body>
-            <div class="card-footer">Add a comment...</div>
+            <div className="card-footer">Add a comment...</div>
           </Card>
         ))
       ) : (

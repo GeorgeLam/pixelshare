@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 // import PropTypes from "prop-types";
 // import { useStaticQuery, graphql, Link } from "gatsby";
 import {
@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 
 import { auth, firestore } from "./firebase";
+import { UserContext } from "./UserContext";
 
 // import { Helmet } from "react-helmet";
 
@@ -32,16 +33,24 @@ const Layout = ({ children }) => {
   let history = useHistory();
 
   const [username, setUsername] = useState(null);
-
+  const [state, setState] = useContext(UserContext);
+  console.log(state);
   // const authCheck =
   auth.onAuthStateChanged(function (user) {
     if (user) {
       setUsername(user);
-      console.log("User currently logged in", user);
+      // console.log("User currently logged in", user);
     } else {
       console.log("Not logged in");
     }
   });
+
+  useEffect(() => {
+    if (username?.displayName) {
+      setState((state) => ({ user: username.displayName }));
+      console.log("effect");
+    }
+  }, [username]);
 
   const handleLogOut = () => {
     auth

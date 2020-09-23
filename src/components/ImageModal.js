@@ -7,7 +7,7 @@ import ImageHeader from "./ImageHeader";
 import ImageContents from "./ImageContents";
 
 const ImageModal = (props) => {
-  console.log(props);
+  // console.log("sasasas", props);
   const [show, setShow] = useState(props.show);
 
   //   const handleClose = () => setShow(false);
@@ -29,7 +29,7 @@ const ImageModal = (props) => {
             borderRadius: 0,
           }}
         >
-          <ImageContents />
+          <ImageContents data={props.data} />
         </Modal.Body>
       </Modal>
     </div>
