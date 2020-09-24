@@ -77,10 +77,8 @@ app.post("/photos", function (req, res) {
 });
 
 //Route: updating
-
 app.post("/photoUpdate", function (req, res) {
   console.log("aqaqaqa", req.body);
-  // res.sendFile("/index.html", { root: "./server" });
   let query = null;
   if (req.body.queryType == "like") {
     req.body.likeStatus
@@ -97,6 +95,15 @@ app.post("/photoUpdate", function (req, res) {
           comment: req.body.commentValue,
           commentTime: Date.now(),
         },
+      },
+    };
+  }
+
+  if (req.body.queryType == "commentDelete") {
+    console.log("New comment deletion...");
+    command = {
+      $pull: {
+        comments: { commentTime: req.body.commentTime, user: req.body.author },
       },
     };
   }

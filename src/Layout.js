@@ -49,6 +49,9 @@ const Layout = ({ children }) => {
     if (username?.displayName) {
       setState((state) => ({ user: username.displayName }));
       console.log("effect");
+    } else {
+      console.log("effect2");
+      setState((state) => ({ user: null }));
     }
   }, [username]);
 

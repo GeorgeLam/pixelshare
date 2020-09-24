@@ -38,6 +38,25 @@ const FullArea = (props) => {
       });
   };
 
+  const deleteComment = (commentTime, author) => {
+    console.log("Deleting", commentTime, author);
+
+    axios
+      .post("http://localhost:5000/photoUpdate/", {
+        queryType: "commentDelete",
+        fileName: props.data.fileName,
+        commentTime: commentTime,
+        author: author,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setCommentsArray(response.data.comments);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <div
       className="d-flex flex-column"
@@ -68,12 +87,13 @@ const FullArea = (props) => {
         }}
       >
         <div>
-          {commentsArray.length ? (
-            commentsArray.map((comment) => (
+          {commentsArray?.length ? (
+            commentsArray?.map((comment) => (
               <ImageHeader
                 author={comment.user}
                 comment={comment.comment}
                 commentTime={comment.commentTime}
+                deleteComment={deleteComment}
               />
             ))
           ) : (
