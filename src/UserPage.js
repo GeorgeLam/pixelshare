@@ -18,7 +18,7 @@ const UserPage = ({ match }) => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState();
   // const recentPhotos = ["../img/1.jpg"];
-  console.log("rrr", useContext(UserContext));
+  // console.log("rrr", useContext(UserContext));
 
   useEffect(() => {
     axios
@@ -43,7 +43,7 @@ const UserPage = ({ match }) => {
 
   return (
     <Layout>
-      <p>Hello, {state.user}</p>
+      {/* <p>Hello, {state.user}</p> */}
       {data && (
         <ImageModal
           show={show}

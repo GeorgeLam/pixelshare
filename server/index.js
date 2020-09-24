@@ -79,44 +79,51 @@ app.post("/photos", function (req, res) {
 //Route: updating
 
 app.post("/photoUpdate", function (req, res) {
+  console.log("aqaqaqa", req.body);
   // res.sendFile("/index.html", { root: "./server" });
   let query = null;
-  if (req.body) {
-    // console.log(req.body);
-    // console.log("!!!!!", req.body.currentUser);
-    // if (req.body.queryType == "like") query = {};
-
-    // if (1) command = { $addToSet: { likes: "fsjfd" } };
+  if (req.body.queryType == "like") {
     req.body.likeStatus
       ? (command = { $pull: { likes: req.body.currentUser } })
       : (command = { $addToSet: { likes: req.body.currentUser } });
-
-    MongoClient.connect(process.env.DB_Conn, async function (err, db) {
-      if (err) throw err;
-      try {
-        await db
-          .db("Pixelshare")
-          .collection("photos")
-          .findOneAndUpdate(
-            {
-              fileName: req.body.fileName,
-              // likes: { $nin: [req.body.currentUser] },
-            },
-            command,
-            // $addToSet: { likes: req.body.currentUser },
-            { returnOriginal: false }
-          )
-          .then((docs) => {
-            console.log("zzzzz", docs.value);
-            res.send(docs.value);
-          });
-        db.close();
-      } catch (err) {
-        console.log("ERRRRRRRRRRRRRR", err);
-        res.json({ msg: err });
-      }
-    });
   }
+
+  if (req.body.queryType == "comment") {
+    console.log("New comment received...");
+    command = {
+      $addToSet: {
+        comments: {
+          user: req.body.currentUser,
+          comment: req.body.commentValue,
+          commentTime: Date.now(),
+        },
+      },
+    };
+  }
+
+  MongoClient.connect(process.env.DB_Conn, async function (err, db) {
+    if (err) throw err;
+    try {
+      await db
+        .db("Pixelshare")
+        .collection("photos")
+        .findOneAndUpdate(
+          {
+            fileName: req.body.fileName,
+          },
+          command,
+          { returnOriginal: false }
+        )
+        .then((docs) => {
+          console.log("zzzzz", docs.value);
+          res.send(docs.value);
+        });
+      db.close();
+    } catch (err) {
+      console.log("ERRRRRRRRRRRRRR", err);
+      res.json({ msg: err });
+    }
+  });
 });
 
 //Route: uploading

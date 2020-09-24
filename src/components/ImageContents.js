@@ -4,6 +4,7 @@ import ImageHeader from "./ImageHeader";
 import ImageControls from "./ImageControls";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { format, render, cancel, register } from "timeago.js";
+import CommentBox from "./CommentBox";
 
 const ImageContents = (props) => {
   let setSrc = props.data ? props.data : require("./1.jpg");
@@ -26,7 +27,7 @@ const ImageContents = (props) => {
         style={{
           backgroundColor: "white",
           border: "1px solid rgba(0,0,0,0.3)",
-          minWidth: "30%",
+          width: "30%",
         }}
       >
         <div
@@ -36,7 +37,6 @@ const ImageContents = (props) => {
           }}
         >
           <ImageHeader author={props.data.author} />
-          {/* //CHANGE THIS */}
         </div>
 
         <div
@@ -46,7 +46,18 @@ const ImageContents = (props) => {
             height: "75%",
           }}
         >
-          Woohoo, you're reading this text in a modal!
+          <div>
+            <ImageHeader
+              author={props.data.author}
+              comment="This was a great post.
+            Thanks for posting this. Lorem ipsum Lorem ipsumLorem ipsumLorem
+            ipsumLorem ipsumLorem ipsum"
+            />
+          </div>
+
+          <div>
+            <ImageHeader author={props.data.author} comment="Salad" />
+          </div>
         </div>
         <div
           style={{
@@ -55,12 +66,14 @@ const ImageContents = (props) => {
         >
           <ImageControls data={props.data} />
 
-          <br />
           <span style={{ fontSize: 10 }}>
             <Link to={`/p/${props.data.fileName}`} style={{ color: "gray" }}>
               {format(props.data.uploadTime).toUpperCase()}
             </Link>
           </span>
+        </div>
+        <div>
+          <CommentBox data={props.data} />
         </div>
       </div>
     </>

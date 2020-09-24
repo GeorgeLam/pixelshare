@@ -5,7 +5,7 @@ import ImageStyles from "../styles/image.module.css";
 
 const ImageHeader = (props) => {
   return (
-    <>
+    <div className={`d-flex flex-row ${props.comment && "mb-3"}`}>
       <Link to={`/user/${props.author}`}>
         <img
           src={require("./1.jpg")}
@@ -15,14 +15,20 @@ const ImageHeader = (props) => {
           height="30"
         ></img>
       </Link>
-      <Link
-        to={`/user/${props.author}`}
-        className={ImageStyles.username}
-        style={{ color: "black", textDecoration: "none" }}
+      <div
+        className="d-flex flex-column"
+        style={{ fontSize: props.comment ? "0.8em" : "1em" }}
       >
-        {props.author}
-      </Link>
-    </>
+        <Link
+          to={`/user/${props.author}`}
+          className={ImageStyles.username}
+          style={{ color: "black", textDecoration: "none" }}
+        >
+          {props.author}
+        </Link>
+        {props.comment && <>{props.comment}</>}
+      </div>
+    </div>
   );
 };
 
