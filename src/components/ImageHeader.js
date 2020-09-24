@@ -1,11 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import { format, render, cancel, register } from "timeago.js";
 
 import ImageStyles from "../styles/image.module.css";
 
 const ImageHeader = (props) => {
   return (
-    <div className={`d-flex flex-row ${props.comment && "mb-3"}`}>
+    <div className={`d-flex flex-row ${props.comment && "mb-3 px-3 py-2"}`}>
       <Link to={`/user/${props.author}`}>
         <img
           src={require("./1.jpg")}
@@ -26,7 +27,15 @@ const ImageHeader = (props) => {
         >
           {props.author}
         </Link>
-        {props.comment && <>{props.comment}</>}
+        {props.comment && (
+          <>
+            {" "}
+            <span>{props.comment}</span>
+            <span style={{ fontSize: 10, color: "gray" }}>
+              {format(props.commentTime).toUpperCase()}
+            </span>
+          </>
+        )}
       </div>
     </div>
   );
