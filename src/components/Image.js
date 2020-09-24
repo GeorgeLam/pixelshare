@@ -51,7 +51,25 @@ const Image = () => {
               <ImageControls data={photo} />
 
               <Card.Text>
-                <br /> See all comments.
+                <ul style={{ margin: 0, padding: 0 }}>
+                  {photo?.comments?.length ? (
+                    photo?.comments?.map((comment) => (
+                      <li style={{ listStyle: "none" }}>
+                        <strong className="mr-1">
+                          <Link
+                            style={{ color: "black" }}
+                            to={`/user/${comment.user}`}
+                          >
+                            {comment.user}
+                          </Link>
+                        </strong>
+                        {comment.comment}
+                      </li>
+                    ))
+                  ) : (
+                    <></>
+                  )}
+                </ul>
                 <br />
                 <span style={{ fontSize: 10 }}>
                   <Link to={`/p/${photo.fileName}`} style={{ color: "gray" }}>
@@ -60,7 +78,7 @@ const Image = () => {
                 </span>
               </Card.Text>
             </Card.Body>
-            <div className="card-footer">Add a comment...</div>
+            {/* <div className="card-footer">Add a comment...</div> */}
           </Card>
         ))
       ) : (

@@ -42,7 +42,7 @@ const ImageControls = (props) => {
         <Link to="#" className="mr-2" onClick={handleLike}>
           {likeStatus ? <span>Unlike</span> : <span>Like</span>}
         </Link>
-        <Link to="#">Comment</Link>
+        <Link to={`/p/${props.data.fileName}`}>Comment</Link>
       </div>
       <div>
         {likesArray?.length ? (
