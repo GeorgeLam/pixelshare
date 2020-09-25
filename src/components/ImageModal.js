@@ -19,7 +19,7 @@ const ImageModal = (props) => {
         show={props.show}
         onHide={props.handleClose}
         dialogClassName="modal-90w"
-        style={{ width: "90%" }}
+        // style={{ width: "90%" }}
       >
         <Modal.Body
           style={{

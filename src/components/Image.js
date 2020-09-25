@@ -40,12 +40,12 @@ const Image = () => {
             <Card.Header>
               <ImageHeader author={photo.author} />
             </Card.Header>
-            <Card.Img
+            <img
               variant="top"
               src={aws + photo.fileName}
               // src={require("./1.jpg")}
               alt={`Photo uploaded by ${photo.author}`}
-              style={{ maxHeight: 500, objectFit: "cover" }}
+              style={{ maxHeight: 500, objectFit: "cover", width: "100%" }}
             />
             <Card.Body>
               <ImageControls data={photo} />

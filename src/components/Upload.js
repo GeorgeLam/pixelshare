@@ -1,48 +1,55 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { auth, firestore } from "../firebase";
+import ReactCrop from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 import Layout from "../Layout";
+import { UserContext } from "../UserContext";
 
 const Upload = () => {
-  const [username, setUsername] = useState(null);
+  const [state, setState] = useContext(UserContext);
+  // console.log(state);
+  let history = useHistory();
 
-  auth.onAuthStateChanged(function (user) {
-    if (user) {
-      setUsername(user);
-      console.log("User currently logged in", user);
-    } else {
-      console.log("Not logged in");
-    }
-  });
-
-  console.log("up");
+  // console.log("up");
   const data = { hello: "here it is" };
+  const [acceptableFile, setAcceptableFile] = useState();
   const [file, setFile] = useState();
   const [loaded, setLoaded] = useState();
   const [recentFile, setRecentFile] = useState();
 
   const upload = async (e) => {
     e.preventDefault();
-    console.log("file uploading...");
-    console.log(e.target);
     console.log(e.target.files);
-    console.log(e.target.files[0].type.slice(0, 5));
-    if (e.target.files[0].type.slice(0, 5) !== "image") {
-      alert("Unacceptable file");
-      e.target.files[0] = null;
+    if (e?.target?.files[0]?.type?.slice(0, 5) !== "image") {
+      setAcceptableFile(0);
+      alert("File type unsupported - please only upload images");
+      return;
+    }
+    if (e?.target?.files[0]?.size > 300000) {
+      setAcceptableFile(0);
+      alert("File too large - please select images under 300kb");
+      return;
+    } else {
+      console.log(window.URL.createObjectURL(e.target.files[0]));
+      setLoaded(window.URL.createObjectURL(e.target.files[0]));
+
+      setAcceptableFile(1);
     }
     setFile(e.target.files[0]);
 
-    axios
-      .post("http://localhost:5000/api", e.target.files[0])
-      .then(function (response) {
-        console.log(response);
-        // setRecentFile(response.location);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    // axios
+    //   .post("http://localhost:5000/api", e.target.files[0])
+    //   .then(function (response) {
+    //     console.log
+    //     console.log(response);
+    //     // setRecentFile(response.location);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
   };
 
   //   const showImg = (src) => {
@@ -53,12 +60,14 @@ const Upload = () => {
 
   const handleUpload = (e) => {
     e.preventDefault();
-    console.log("uppp");
-    console.log(file);
+    // console.log(window.URL.createObjectURL(croppedImage));
+
+    // console.log("uppp");
+    console.log(croppedImage);
 
     var data = new FormData();
-    data.append("imageUpload", file);
-    data.append("authorName", username.displayName);
+    data.append("imageUpload", croppedImage);
+    data.append("authorName", state.user);
 
     axios
       .post("http://localhost:5000/api", data, {
@@ -70,9 +79,18 @@ const Upload = () => {
       })
       .then((response) => {
         console.log(response.data);
-        setTimeout(() => {
-          setLoaded(response.data.location);
-        }, 2000);
+        if ("error" in response.data) {
+          alert(response.data.error);
+          history.push("/");
+          return;
+        }
+        if ("success" in response.data) {
+          setTimeout(() => {
+            setLoaded(response.data.location);
+            alert("Image uploaded!");
+            history.push("/");
+          }, 1000);
+        }
       })
 
       .catch(function (error) {
@@ -86,13 +104,93 @@ const Upload = () => {
   //     }
   //   }, [loaded]);
 
+  const [crop, setCrop] = useState({
+    unit: "px", // default, can be 'px' or '%'
+    x: 130,
+    y: 50,
+    width: 200,
+    height: 200,
+    aspect: 1 / 1,
+    maxHeight: 800,
+    maxWidth: 800,
+    minHeight: 500,
+    minHeight: 500,
+  });
+
+  const [completedCrop, setCompletedCrop] = useState(null);
+  const [imageRef, setImageRef] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [croppedImageURL, setCroppedImageURL] = useState(null);
+
+  const onImageLoaded = (image) => {
+    setImageRef(image);
+  };
+
+  const onCropChange = (crop) => {
+    console.log("Changed!");
+    setCrop(crop);
+  };
+
+  const onCropComplete = (crop) => {
+    if (imageRef && crop.width && crop.height) {
+      const croppedImageUrl = getCroppedImg(imageRef, crop);
+      setCroppedImageURL(croppedImageUrl);
+      console.log("final", croppedImageURL);
+      console.log("final", croppedImageUrl);
+    }
+  };
+
+  const getCroppedImg = (image, crop) => {
+    const canvas = document.createElement("canvas");
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    );
+
+    const reader = new FileReader();
+    canvas.toBlob((blob) => {
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        dataURLtoFile(reader.result, "cropped.jpg");
+      };
+    });
+  };
+
+  const dataURLtoFile = (dataurl, filename) => {
+    let arr = dataurl.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    let croppedImage = new File([u8arr], filename, { type: mime });
+    setCroppedImage(croppedImage);
+    console.log("nci", croppedImage);
+  };
+
   return (
     <Layout>
       <div>
         <div className="container mt-3">
           <div className="row">
-            <div className="col-md-6 mx-auto">
-              {username ? (
+            <div className="col text-center">
+              {state.user ? (
                 <>
                   <form
                     method="post"
@@ -102,29 +200,52 @@ const Upload = () => {
                     onSubmit={handleUpload}
                   >
                     <div className="form-group files">
-                      <label onClick={upload}>Upload Your File </label>
+                      <label onClick={upload}>
+                        Upload Your File (max: 300kb)
+                      </label>
                       <input
                         type="file"
                         className="form-control"
                         name="file"
                         multiple=""
                         onChange={upload}
-                        accept=".jpg, .jpeg, .png"
+                        accept="image/*"
                       ></input>
                     </div>
-                    <button className="btn btn-success">Upload</button>
+                    {acceptableFile ? (
+                      <button className="btn btn-success">Upload</button>
+                    ) : (
+                      <button className="btn btn-success" disabled>
+                        Upload
+                      </button>
+                    )}
                   </form>
-                  <p>Hello</p>
-                  {loaded && (
-                    <>
-                      <p>Salad</p>
-                      <img src={loaded}></img>
-                    </>
-                  )}
                 </>
               ) : (
                 "You must log in first!"
               )}
+            </div>
+            <div className="col text-center">
+              <p>Image preview:</p>
+
+              {loaded && (
+                <>
+                  {/* <img style={{ width: 400 }} src={loaded}></img> */}
+                  <ReactCrop
+                    crop={crop}
+                    src={loaded}
+                    onImageLoaded={onImageLoaded}
+                    onComplete={onCropComplete}
+                    onChange={onCropChange}
+                  />
+                </>
+              )}
+              {/* {croppedImage && (
+                <>
+                  <p>Hi</p>
+                  <img src={croppedImage}></img>
+                </>
+              )} */}
             </div>
           </div>
         </div>

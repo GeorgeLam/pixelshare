@@ -42,6 +42,8 @@ const PhotoPage = ({ match }) => {
                 justifyContent: "center",
                 padding: 0,
                 borderRadius: 0,
+                width: "80%",
+                margin: "0 auto",
               }}
             >
               {recentPhotos && <ImageContents data={recentPhotos} />}

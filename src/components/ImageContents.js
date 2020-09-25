@@ -15,16 +15,20 @@ const ImageContents = (props) => {
   return (
     <>
       <div
-        style={
-          {
-            // minWidth: "60%"
-          }
-        }
+        style={{
+          // minWidth: "60%"
+          flex: 1,
+        }}
       >
         <img
           // src={require("./1.jpg")}
           src={aws + props.data.fileName}
-          style={{ maxHeight: 600, objectFit: "cover" }}
+          style={{
+            maxHeight: 600,
+            objectFit: "cover",
+            width: "100%",
+            height: "100%",
+          }}
         ></img>{" "}
       </div>
       <>

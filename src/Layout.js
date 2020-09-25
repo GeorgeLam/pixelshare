@@ -34,7 +34,7 @@ const Layout = ({ children }) => {
 
   const [username, setUsername] = useState(null);
   const [state, setState] = useContext(UserContext);
-  console.log(state);
+  // console.log(state);
   // const authCheck =
   auth.onAuthStateChanged(function (user) {
     if (user) {

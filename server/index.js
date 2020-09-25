@@ -23,17 +23,6 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//Multer start
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "./uploads");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + file.originalname);
-//   },
-//   // buffer: function(req, file, cb)
-// });
-
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
@@ -64,7 +53,7 @@ app.post("/photos", function (req, res) {
           .limit(3)
           .toArray()
           .then((docs) => {
-            console.log(docs);
+            // console.log(docs);
             res.send(docs);
           });
         db.close();
@@ -78,7 +67,7 @@ app.post("/photos", function (req, res) {
 
 //Route: updating
 app.post("/photoUpdate", function (req, res) {
-  console.log("aqaqaqa", req.body);
+  console.log("photoUpdate API hit", req.body);
   let query = null;
   if (req.body.queryType == "like") {
     req.body.likeStatus
@@ -136,16 +125,46 @@ app.post("/photoUpdate", function (req, res) {
 //Route: uploading
 app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
   console.log("Node has received something...");
+  console.log(req.file);
   // console.log("!!!!!!!!!!!!!!!!!!!", req.body);
   // console.log(req.body.authorName);
   let fileName = Date.now() + req.file.originalname;
   let authorName = "example";
   // res.send({ Response: "Received by node" });
-  uploadFile(req.file.buffer, fileName, req.body.authorName);
 
-  res.send({
-    location: "https://pixelshare.s3.eu-west-2.amazonaws.com/" + fileName,
+  //Checking that user has not exceeded upload limits:
+
+  MongoClient.connect(process.env.DB_Conn, async function (err, db) {
+    if (err) throw err;
+    try {
+      await db
+        .db("Pixelshare")
+        .collection("photos")
+        .find({ author: req.body.authorName })
+        .sort({ uploadTime: -1 })
+        .toArray()
+        .then((docs) => {
+          console.log(docs.length);
+          if (docs.length > 5) {
+            res.send({
+              error: `Sorry, you have reached the upload limit. You may only upload nine files.`,
+            });
+            return;
+          }
+          console.log("Upload limit hasn't been exceeded, uploading...");
+          uploadFile(req.file.buffer, fileName, req.body.authorName);
+          res.send({
+            success: `https://pixelshare.s3.eu-west-2.amazonaws.com/${fileName}`,
+          });
+        });
+      db.close();
+    } catch (err) {
+      console.log(err);
+      res.json({ msg: err });
+    }
   });
+
+  //User hasn't exceeded limits:
 });
 
 app.post("/signup", function (req, res) {

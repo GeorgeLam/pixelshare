@@ -64,7 +64,7 @@ const FullArea = (props) => {
         backgroundColor: "white",
         border: "1px solid rgba(0,0,0,0.3)",
         // minWidth: 250,
-        flex: 1,
+        // flex: 1,
         // height: "100%",
         // overflowY: "auto",
       }}
