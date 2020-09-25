@@ -27,11 +27,6 @@ const Upload = () => {
       setAcceptableFile(0);
       alert("File type unsupported - please only upload images");
       return;
-    }
-    if (e?.target?.files[0]?.size > 300000) {
-      setAcceptableFile(0);
-      alert("File too large - please select images under 300kb");
-      return;
     } else {
       console.log(window.URL.createObjectURL(e.target.files[0]));
       setLoaded(window.URL.createObjectURL(e.target.files[0]));
@@ -64,6 +59,11 @@ const Upload = () => {
 
     // console.log("uppp");
     console.log(croppedImage);
+
+    if (croppedImage.size > 300000) {
+      alert("File too large - please select images under 300kb");
+      return;
+    }
 
     var data = new FormData();
     data.append("imageUpload", croppedImage);
@@ -111,8 +111,8 @@ const Upload = () => {
     width: 200,
     height: 200,
     aspect: 1 / 1,
-    maxHeight: 800,
-    maxWidth: 800,
+    maxHeight: 1200,
+    maxWidth: 1200,
     minHeight: 500,
     minHeight: 500,
   });
@@ -135,8 +135,6 @@ const Upload = () => {
     if (imageRef && crop.width && crop.height) {
       const croppedImageUrl = getCroppedImg(imageRef, crop);
       setCroppedImageURL(croppedImageUrl);
-      console.log("final", croppedImageURL);
-      console.log("final", croppedImageUrl);
     }
   };
 
@@ -164,7 +162,7 @@ const Upload = () => {
     canvas.toBlob((blob) => {
       reader.readAsDataURL(blob);
       reader.onloadend = () => {
-        dataURLtoFile(reader.result, "cropped.jpg");
+        dataURLtoFile(reader.result, "c.jpg");
       };
     });
   };
@@ -226,7 +224,10 @@ const Upload = () => {
               )}
             </div>
             <div className="col text-center">
-              <p>Image preview:</p>
+              <p>
+                Image preview:{" "}
+                {croppedImage && `${croppedImage.size / 1000} kb`}
+              </p>
 
               {loaded && (
                 <>
