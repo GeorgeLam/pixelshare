@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { auth, firestore } from "../firebase";
@@ -10,8 +10,8 @@ import { UserContext } from "../UserContext";
 
 const Upload = () => {
   const [state, setState] = useContext(UserContext);
-  // console.log(state);
   let history = useHistory();
+  const captionRef = useRef(null);
 
   // console.log("up");
   const data = { hello: "here it is" };
@@ -67,6 +67,7 @@ const Upload = () => {
 
     var data = new FormData();
     data.append("imageUpload", croppedImage);
+    data.append("caption", captionRef.current.value);
     data.append("authorName", state.user);
 
     axios
@@ -104,6 +105,7 @@ const Upload = () => {
   //     }
   //   }, [loaded]);
 
+  //Image crop functions start
   const [crop, setCrop] = useState({
     unit: "px", // default, can be 'px' or '%'
     x: 130,
@@ -124,6 +126,7 @@ const Upload = () => {
 
   const onImageLoaded = (image) => {
     setImageRef(image);
+    setCroppedImage(image);
   };
 
   const onCropChange = (crop) => {
@@ -182,6 +185,8 @@ const Upload = () => {
     console.log("nci", croppedImage);
   };
 
+  //Image crop functions end
+
   return (
     <Layout>
       <div>
@@ -210,6 +215,11 @@ const Upload = () => {
                         accept="image/*"
                       ></input>
                     </div>
+                    <textarea
+                      style={{ width: "100%" }}
+                      ref={captionRef}
+                      placeholder="Enter a caption..."
+                    ></textarea>
                     {acceptableFile ? (
                       <button className="btn btn-success">Upload</button>
                     ) : (

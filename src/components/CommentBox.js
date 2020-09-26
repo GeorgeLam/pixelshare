@@ -24,7 +24,7 @@ const CommentBox = (props) => {
       })
       .then((response) => {
         console.log(response.data);
-        // setLikesArray(response.data.likes);
+        commentRef.current.value = "";
       })
       .catch(function (error) {
         console.log(error);

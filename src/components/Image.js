@@ -38,7 +38,7 @@ const Image = () => {
             className="my-5"
           >
             <Card.Header>
-              <ImageHeader author={photo.author} />
+              <ImageHeader author={photo.author} fileName={photo.fileName} />
             </Card.Header>
             <img
               variant="top"
@@ -51,6 +51,7 @@ const Image = () => {
               <ImageControls data={photo} />
 
               <Card.Text>
+                {photo?.caption && <span>{photo?.caption}</span>}
                 <ul style={{ margin: 0, padding: 0 }}>
                   {photo?.comments?.length ? (
                     photo?.comments?.map((comment) => (

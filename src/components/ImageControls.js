@@ -61,7 +61,7 @@ const ImageControls = (props) => {
             ))}
           </>
         ) : (
-          <span>No likes yet</span>
+          <span></span>
         )}
       </div>
     </div>

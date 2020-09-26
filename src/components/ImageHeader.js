@@ -4,14 +4,59 @@ import { format, render, cancel, register } from "timeago.js";
 import { UserContext } from "../UserContext";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 import ImageStyles from "../styles/image.module.css";
 
 const ImageHeader = (props) => {
+  console.log(props.fileName);
+  let history = useHistory();
+
   const [state, setState] = useContext(UserContext);
   console.log(state.user);
   console.log(props);
   // const deleteComment = props.deleteComment;
+
+  const deleteComment = (commentTime, author) => {
+    console.log("Deleting", commentTime, author);
+
+    axios
+      .post("http://localhost:5000/photoUpdate/", {
+        queryType: "commentDelete",
+        fileName: props.fileName, ///////////////////
+        commentTime: commentTime,
+        author: author,
+      })
+      .then((response) => {
+        console.log(response.data);
+        props.setCommentsArray(response.data.comments);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const deletePhoto = (fileName) => {
+    console.log("Deleting", fileName);
+
+    axios
+      .post("http://localhost:5000/photoUpdate/", {
+        queryType: "photoDelete",
+        fileName: fileName,
+      })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.deletedCount) {
+          alert("Photo has been deleted!");
+          history.push("/");
+        }
+        // setCommentsArray(response.data.comments);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <div className={`d-flex flex-row ${props.comment && "mb-3 px-3 py-2"}`}>
@@ -49,10 +94,26 @@ const ImageHeader = (props) => {
       </div>
 
       <div>
-        {props.author == state.user && props.comment && (
+        {props.author == state.user && props.comment && !props.caption && (
           <span
             onClick={() => {
-              props.deleteComment(props.commentTime, props.author);
+              if (window.confirm("Confirm comment deletion?")) {
+                deleteComment(props.commentTime, props.author);
+              }
+            }}
+          >
+            <img
+              src={require("../img/trash.svg")}
+              style={{ height: " 30%", cursor: "pointer" }}
+            ></img>
+          </span>
+        )}
+        {props.author == state.user && !props.comment && !props.caption && (
+          <span
+            onClick={() => {
+              if (window.confirm("Confirm photo deletion?")) {
+                deletePhoto(props.fileName);
+              }
             }}
           >
             <img

@@ -19,6 +19,7 @@ const FullArea = (props) => {
   }, [commentsArray]);
 
   const handleComment = () => {
+    if (!commentRef.current.value) return;
     console.log("Posting", state);
     console.log(commentRef.current.value);
 
@@ -30,25 +31,7 @@ const FullArea = (props) => {
         currentUser: state.user,
       })
       .then((response) => {
-        console.log(response.data);
-        setCommentsArray(response.data.comments);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  const deleteComment = (commentTime, author) => {
-    console.log("Deleting", commentTime, author);
-
-    axios
-      .post("http://localhost:5000/photoUpdate/", {
-        queryType: "commentDelete",
-        fileName: props.data.fileName,
-        commentTime: commentTime,
-        author: author,
-      })
-      .then((response) => {
+        commentRef.current.value = "";
         console.log(response.data);
         setCommentsArray(response.data.comments);
       })
@@ -75,7 +58,10 @@ const FullArea = (props) => {
           padding: "0.8em",
         }}
       >
-        <ImageHeader author={props.data.author} />
+        <ImageHeader
+          author={props.data.author}
+          fileName={props.data.fileName}
+        />
       </div>
 
       <div
@@ -87,17 +73,30 @@ const FullArea = (props) => {
         }}
       >
         <div>
+          {props?.data?.caption && (
+            <ImageHeader
+              author={props.data.author}
+              comment={props.data.caption}
+              commentTime={props.data.uploadTime}
+              caption={1}
+            />
+          )}
           {commentsArray?.length ? (
             commentsArray?.map((comment) => (
               <ImageHeader
                 author={comment.user}
                 comment={comment.comment}
                 commentTime={comment.commentTime}
-                deleteComment={deleteComment}
+                fileName={props.data.fileName}
+                deleteComment={1}
+                setCommentsArray={(newComments) => {
+                  console.log("sca");
+                  setCommentsArray(newComments);
+                }}
               />
             ))
           ) : (
-            <span className="p-2">No comments yet</span>
+            <span className="p-2"></span>
           )}
         </div>
       </div>
@@ -125,7 +124,7 @@ const FullArea = (props) => {
           }}
         >
           <textarea
-            placeholder="Add a comment..."
+            placeholder="Add a comment"
             ref={commentRef}
             style={{
               width: "100%",

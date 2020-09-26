@@ -97,6 +97,29 @@ app.post("/photoUpdate", function (req, res) {
     };
   }
 
+  if (req.body.queryType == "photoDelete") {
+    console.log("New image deletion...");
+
+    MongoClient.connect(process.env.DB_Conn, async function (err, db) {
+      if (err) throw err;
+      try {
+        await db
+          .db("Pixelshare")
+          .collection("photos")
+          .deleteOne({ fileName: req.body.fileName })
+          .then((docs) => {
+            console.log("deleted...", docs);
+            res.send(docs);
+          });
+        db.close();
+      } catch (err) {
+        console.log("ERRRRRRRRRRRRRR", err);
+        res.json({ msg: err });
+      }
+    });
+    return;
+  }
+
   MongoClient.connect(process.env.DB_Conn, async function (err, db) {
     if (err) throw err;
     try {
@@ -129,7 +152,7 @@ app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
   // console.log("!!!!!!!!!!!!!!!!!!!", req.body);
   // console.log(req.body.authorName);
   let fileName = Date.now() + req.file.originalname;
-  let authorName = "example";
+  // let authorName = "example";
   // res.send({ Response: "Received by node" });
 
   //Checking that user has not exceeded upload limits:
@@ -152,7 +175,12 @@ app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
             return;
           }
           console.log("Upload limit hasn't been exceeded, uploading...");
-          uploadFile(req.file.buffer, fileName, req.body.authorName);
+          uploadFile(
+            req.file.buffer,
+            fileName,
+            req.body.authorName,
+            req.body.caption
+          );
           res.send({
             success: `https://pixelshare.s3.eu-west-2.amazonaws.com/${fileName}`,
           });
@@ -163,8 +191,6 @@ app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
       res.json({ msg: err });
     }
   });
-
-  //User hasn't exceeded limits:
 });
 
 app.post("/signup", function (req, res) {
@@ -199,7 +225,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.SECRET,
 });
 
-const uploadFile = (fileContent, fileName, authorName) => {
+const uploadFile = (fileContent, fileName, authorName, caption) => {
   const params = {
     Bucket: process.env.BUCKET,
     Key: fileName,
@@ -224,6 +250,7 @@ const uploadFile = (fileContent, fileName, authorName) => {
           {
             fileName: data.key,
             author: authorName,
+            caption: caption,
             uploadTime: Date.now(),
           },
           function (err, res) {
