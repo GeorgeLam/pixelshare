@@ -4,7 +4,7 @@ import axios from "axios";
 import Layout from "./Layout";
 import Image from "./components/Image";
 import ImageModal from "./components/ImageModal";
-import { UserContext } from "./UserContext";
+import { UserContext } from "./Context";
 
 import { Container, Row, Col } from "react-bootstrap/";
 

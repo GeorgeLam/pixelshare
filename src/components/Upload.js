@@ -6,7 +6,7 @@ import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
 import Layout from "../Layout";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../Context";
 
 const Upload = () => {
   const [state, setState] = useContext(UserContext);

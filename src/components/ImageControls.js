@@ -1,12 +1,16 @@
 import React, { useContext, useRef, useState } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { useHistory, BrowserRouter as Router, Link } from "react-router-dom";
 
 import axios from "axios";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../Context";
+import { ModalContext } from "../Context";
 
 const ImageControls = (props) => {
+  let history = useHistory();
+
   //   console.log(props);
   const [state, setState] = useContext(UserContext);
+  const [modalShow, setModalShow] = useContext(ModalContext);
   console.log(props?.data?.likes?.includes(state.user));
   const [likesArray, setLikesArray] = useState(props.data.likes || []);
   const [likeStatus, setLikeStatus] = useState(
@@ -14,7 +18,19 @@ const ImageControls = (props) => {
   );
   const likeRef = useRef();
 
+  const handleComment = () => {
+    if (!state.user) {
+      history.push("/login");
+      return;
+    }
+    history.push(`/p/${props.data.fileName}`);
+  };
+
   const handleLike = () => {
+    if (!state.user) {
+      history.push("/login");
+      return;
+    }
     console.log("Liking", state);
     console.log(likeRef);
     setLikeStatus(!likeStatus);
@@ -42,7 +58,7 @@ const ImageControls = (props) => {
         <Link to="#" className="mr-2" onClick={handleLike}>
           {likeStatus ? <span>Unlike</span> : <span>Like</span>}
         </Link>
-        <Link to={`/p/${props.data.fileName}`}>Comment</Link>
+        <Link onClick={handleComment}>Comment</Link>
       </div>
       <div>
         {likesArray?.length ? (

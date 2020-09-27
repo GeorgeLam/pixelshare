@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 
 import { auth, firestore } from "./firebase";
-import { UserContext } from "./UserContext";
+import { UserContext } from "./Context";
 
 // import { Helmet } from "react-helmet";
 

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { format, render, cancel, register } from "timeago.js";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../Context";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";

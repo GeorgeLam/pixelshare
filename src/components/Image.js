@@ -7,6 +7,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ImageHeader from "./ImageHeader";
 import ImageControls from "./ImageControls";
+import CommentBox from "./CommentBox";
 
 import ImageStyles from "../styles/image.module.css";
 
@@ -79,6 +80,9 @@ const Image = () => {
                 </span>
               </Card.Text>
             </Card.Body>
+            <Card.Footer>
+              <CommentBox data={photo} />
+            </Card.Footer>
             {/* <div className="card-footer">Add a comment...</div> */}
           </Card>
         ))

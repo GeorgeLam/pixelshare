@@ -3,12 +3,13 @@ import axios from "axios";
 
 import ImageHeader from "./ImageHeader";
 import ImageControls from "./ImageControls";
-import { BrowserRouter as Router, Link } from "react-router-dom";
-import { UserContext } from "../UserContext";
+import { useHistory, BrowserRouter as Router, Link } from "react-router-dom";
+import { UserContext } from "../Context";
 import { format, render, cancel, register } from "timeago.js";
 import CommentBox from "./CommentBox";
 
 const FullArea = (props) => {
+  let history = useHistory();
   const [state, setState] = useContext(UserContext);
   const [commentsArray, setCommentsArray] = useState(props.data.comments || []);
 
@@ -19,6 +20,10 @@ const FullArea = (props) => {
   }, [commentsArray]);
 
   const handleComment = () => {
+    if (!state.user) {
+      history.push("/login");
+      return;
+    }
     if (!commentRef.current.value) return;
     console.log("Posting", state);
     console.log(commentRef.current.value);
