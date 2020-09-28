@@ -51,7 +51,12 @@ const SignIn = () => {
           <span className="text-center">Sign In</span>
         </Card.Header>
         <Card.Body>
-          <Form className="mx-auto mb-3" style={{ width: "80%" }}>
+          <Form
+            className="mx-auto mb-3"
+            style={{ width: "80%" }}
+            onSubmit={signIn}
+            id="signInForm"
+          >
             <Form.Group controlId="formEmail">
               <Form.Label>Email</Form.Label>
               <Form.Control
@@ -77,6 +82,7 @@ const SignIn = () => {
               type="button"
               className="w-100"
               onClick={signIn}
+              form="signInForm"
             >
               Submit
             </Button>

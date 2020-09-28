@@ -119,8 +119,12 @@ const FullArea = (props) => {
         </span>
       </div>
       <div>
-        {/* <CommentBox data={props.data} /> */}
-        <div
+        <CommentBox
+          data={props.data}
+          commentsArray={commentsArray}
+          setCommentsArray={setCommentsArray}
+        />
+        {/* <div
           style={{
             width: "100%",
             display: "flex",
@@ -148,6 +152,7 @@ const FullArea = (props) => {
             Post
           </Link>
         </div>
+       */}
       </div>
     </div>
   );

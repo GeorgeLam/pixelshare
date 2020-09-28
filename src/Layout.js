@@ -72,7 +72,7 @@ const Layout = ({ children }) => {
     <>
       {/* <Helmet title="Better Latte Coffee" defer={false} /> */}
       <Navbar bg="light" expand="lg" fixed="top">
-        <Container>
+        <Container style={{ width: "70%" }}>
           {/* <Row>
             <Col> */}
           <Row>

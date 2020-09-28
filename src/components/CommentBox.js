@@ -1,17 +1,27 @@
-import React, { useContext, useRef, useState } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import React, { useContext, useRef, useState, useEffect } from "react";
+import { useHistory, BrowserRouter as Router, Link } from "react-router-dom";
 
 import axios from "axios";
 import { UserContext } from "../Context";
 
 const CommentBox = (props) => {
-  console.log(props);
-  console.log(props.data.fileName);
+  let history = useHistory();
+  console.log(props.commentsArray);
+  // console.log(props.data.fileName);
   const [state, setState] = useContext(UserContext);
+  const [commentsArray, setCommentsArray] = useState(props.commentsArray || []);
+
+  useEffect(() => {
+    console.log(commentsArray);
+  }, [commentsArray]);
 
   const commentRef = useRef();
 
   const handleComment = () => {
+    if (!state.user) {
+      history.push("/login");
+      return;
+    }
     console.log("Posting", state);
     console.log(commentRef.current.value);
 
@@ -25,6 +35,7 @@ const CommentBox = (props) => {
       .then((response) => {
         console.log(response.data);
         commentRef.current.value = "";
+        props.setCommentsArray(response.data.comments);
       })
       .catch(function (error) {
         console.log(error);

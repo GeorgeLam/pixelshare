@@ -30,7 +30,7 @@ const Account = () => {
           <Col xs={10} md={5} className="mx-auto">
             {method ? <SignIn /> : <SignUp />}
             <p className="text-center">
-              click{" "}
+              Click{" "}
               <Link
                 to="#"
                 onClick={() => {
