@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 
+import { useHistory } from "react-router-dom";
 import Layout from "./Layout";
 import Image from "./components/Image";
 import ImageModal from "./components/ImageModal";
 import { UserContext } from "./Context";
+import "./Layout.module.css";
 
 import { Container, Row, Col } from "react-bootstrap/";
 
 const UserPage = ({ match }) => {
+  let history = useHistory();
+  const browserWidth = window.outerWidth;
   const {
     params: { userID },
   } = match;
@@ -53,13 +57,20 @@ const UserPage = ({ match }) => {
         />
       )}
       <Container>
-        <Row className="mb-5" style={{ margin: "0 auto", width: "60%" }}>
+        <Row
+          className="mb-5"
+          style={
+            {
+              // margin: "0 auto", width: "60%"
+            }
+          }
+        >
           <Col xs={3} className="mx-auto mt-5">
             <img
               src={require("./components/1.jpg")}
               alt="User's profile photo"
               className="rounded-circle"
-              style={{ height: "100px", width: "100px" }}
+              style={{ height: "80px", width: "80px" }}
             ></img>
           </Col>
           <Col xs={9} className="mt-5">
@@ -75,34 +86,48 @@ const UserPage = ({ match }) => {
             </span>
           </Col>
         </Row>
-        <Row style={{ width: "80%", margin: "0 auto" }}>
-          {/* <Col xs={12} style={{ width: "80%", margin: "0 auto" }}> */}
-          {recentPhotos ? (
-            recentPhotos?.map((photo, i) => (
-              <>
-                <Col xs={4} className="mb-4">
-                  <img
-                    onClick={() => {
-                      // setShow(1);
-                      setData(recentPhotos[i]);
-                      console.log("Hi");
-                    }}
-                    className=" img-responsive full-width "
-                    src={aws + photo.fileName}
-                    // src={require("./components/1.jpg")}
-                    alt={`Photo uploaded by ${photo.author}`}
-                    style={{
-                      width: "260px",
-                      height: "260px",
-                      objectFit: "cover",
-                    }}
-                  ></img>
-                </Col>
-              </>
-            ))
-          ) : (
-            <p>Loading images...</p>
-          )}
+        <Row
+          style={
+            {
+              // width: "80%", margin: "0 auto"
+            }
+          }
+        >
+          <div class="grid-container">
+            {/* <Col xs={12} style={{ width: "80%", margin: "0 auto" }}> */}
+            {recentPhotos ? (
+              recentPhotos?.map((photo, i) => (
+                <>
+                  {/* <Col xs={4} className="mb-4"> */}
+                  <div>
+                    <img
+                      onClick={() => {
+                        if (browserWidth < 768) {
+                          history.push(`/p/${photo.fileName}`);
+                        }
+                        // setShow(1);
+                        setData(recentPhotos[i]);
+                        console.log("Hi");
+                      }}
+                      className=" img-responsive full-width "
+                      src={aws + photo.fileName}
+                      // src={require("./components/1.jpg")}
+                      alt={`Photo uploaded by ${photo.author}`}
+                      style={{
+                        width: "100%",
+                        // height: "260px",
+                        objectFit: "cover",
+                        maxWidth: 200,
+                      }}
+                    ></img>
+                  </div>
+                  {/* </Col> */}
+                </>
+              ))
+            ) : (
+              <p>Loading images...</p>
+            )}
+          </div>
           {/* </Col> */}
         </Row>
       </Container>

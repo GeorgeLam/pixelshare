@@ -191,7 +191,33 @@ const Upload = () => {
     <Layout>
       <div>
         <div className="container mt-3">
-          <div className="row">
+          <div className="">
+            <div className="col text-center">
+              <p>
+                Image preview:{" "}
+                {croppedImage && `${croppedImage.size / 1000} kb`}
+              </p>
+
+              {loaded && (
+                <>
+                  {/* <img style={{ width: 400 }} src={loaded}></img> */}
+                  <ReactCrop
+                    crop={crop}
+                    src={loaded}
+                    onImageLoaded={onImageLoaded}
+                    onComplete={onCropComplete}
+                    onChange={onCropChange}
+                  />
+                </>
+              )}
+              {/* {croppedImage && (
+                <>
+                  <p>Hi</p>
+                  <img src={croppedImage}></img>
+                </>
+              )} */}
+            </div>
+
             <div className="col text-center">
               {state.user ? (
                 <>
@@ -221,7 +247,7 @@ const Upload = () => {
                       placeholder="Enter a caption..."
                     ></textarea>
                     {acceptableFile ? (
-                      <button className="btn btn-success">Upload</button>
+                      <button className="btn btn-success my-2">Upload</button>
                     ) : (
                       <button className="btn btn-success" disabled>
                         Upload
@@ -232,31 +258,6 @@ const Upload = () => {
               ) : (
                 "You must log in first!"
               )}
-            </div>
-            <div className="col text-center">
-              <p>
-                Image preview:{" "}
-                {croppedImage && `${croppedImage.size / 1000} kb`}
-              </p>
-
-              {loaded && (
-                <>
-                  {/* <img style={{ width: 400 }} src={loaded}></img> */}
-                  <ReactCrop
-                    crop={crop}
-                    src={loaded}
-                    onImageLoaded={onImageLoaded}
-                    onComplete={onCropComplete}
-                    onChange={onCropChange}
-                  />
-                </>
-              )}
-              {/* {croppedImage && (
-                <>
-                  <p>Hi</p>
-                  <img src={croppedImage}></img>
-                </>
-              )} */}
             </div>
           </div>
         </div>

@@ -31,19 +31,21 @@ const PhotoPage = ({ match }) => {
   }, []);
 
   return (
-    <Layout>
+    <Layout customWidth="7">
       <Container>
         <Row>
           <Col className="mt-5">
             <div
+              className="d-flex flex-column flex-md-row mb-3"
               style={{
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
                 padding: 0,
                 borderRadius: 0,
-                width: "80%",
+                width: "100%",
                 margin: "0 auto",
+                border: "1px solid rgba(0,0,0,0.1)",
               }}
             >
               {recentPhotos && <ImageContents data={recentPhotos} />}

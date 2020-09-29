@@ -16,7 +16,7 @@ import { UserContext } from "./Context";
 // import { Helmet } from "react-helmet";
 
 // import Header from "./header";
-import LayoutStyles from "./layout.module.css";
+import LayoutStyles from "./Layout.module.css";
 // import "../styles/blog.module.css"
 import {
   Container,
@@ -29,7 +29,7 @@ import {
   Col,
 } from "react-bootstrap/";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, customWidth }) => {
   let history = useHistory();
 
   const [username, setUsername] = useState(null);
@@ -139,7 +139,14 @@ const Layout = ({ children }) => {
       >
         <div style={{ flex: 1 }}>
           <Row className="h-100">
-            <Col className="mt-5">{children}</Col>
+            <Col
+              xs={12}
+              md={10}
+              lg={customWidth ? customWidth : 5}
+              className="mt-5 mx-auto"
+            >
+              {children}
+            </Col>
           </Row>
         </div>
 

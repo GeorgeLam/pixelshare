@@ -8,6 +8,7 @@ import ImageContents from "./ImageContents";
 import { ModalContext } from "../Context";
 
 const ImageModal = (props) => {
+  const browserNarrowWidth = window.outerWidth;
   const [modalShow, setModalShow] = useContext(ModalContext);
 
   console.log(modalShow);
@@ -26,9 +27,10 @@ const ImageModal = (props) => {
         // style={{ width: "90%" }}
       >
         <Modal.Body
+          className={`d-flex ${
+            browserNarrowWidth <= 1024 ? "flex-column" : "flex-row"
+          }`}
           style={{
-            display: "flex",
-            flexDirection: "row",
             padding: 0,
             borderRadius: 0,
           }}
