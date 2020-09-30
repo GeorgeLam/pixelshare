@@ -3,10 +3,11 @@ import axios from "axios";
 
 import Layout from "./Layout";
 import Image from "./components/Image";
+import Loader from "./components/Loader";
 import ImageModal from "./components/ImageModal";
-import ImageContents from "./components/ImageContents";
 
 import { Container, Row, Col } from "react-bootstrap/";
+import ImageDetailedBox from "./components/ImageDetailedBox";
 
 const PhotoPage = ({ match }) => {
   const {
@@ -14,7 +15,7 @@ const PhotoPage = ({ match }) => {
   } = match;
 
   const aws = "https://pixelshare.s3.eu-west-2.amazonaws.com/";
-  const [recentPhotos, setRecentPhotos] = useState();
+  const [photo, setPhoto] = useState();
   const [show, setShow] = useState(false);
   // const recentPhotos = ["../img/1.jpg"];
 
@@ -23,7 +24,7 @@ const PhotoPage = ({ match }) => {
       .post("http://localhost:5000/photos/", { queryType: "single", fileName })
       .then((response) => {
         console.log(response.data);
-        setRecentPhotos(response.data[0]);
+        setPhoto(response.data[0]);
       })
       .catch(function (error) {
         console.log(error);
@@ -31,7 +32,7 @@ const PhotoPage = ({ match }) => {
   }, []);
 
   return (
-    <Layout customWidth="7">
+    <Layout customWidth="8">
       <Container>
         <Row>
           <Col className="mt-5">
@@ -48,7 +49,7 @@ const PhotoPage = ({ match }) => {
                 border: "1px solid rgba(0,0,0,0.1)",
               }}
             >
-              {recentPhotos && <ImageContents data={recentPhotos} />}
+              {photo ? <ImageDetailedBox data={photo} /> : <Loader />}
             </div>
           </Col>
         </Row>

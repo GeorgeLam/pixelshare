@@ -141,8 +141,9 @@ const Layout = ({ children, customWidth }) => {
           <Row className="h-100">
             <Col
               xs={12}
-              md={10}
+              md={11}
               lg={customWidth ? customWidth : 5}
+              // xl={7}
               className="mt-5 mx-auto"
             >
               {children}
@@ -163,9 +164,5 @@ const Layout = ({ children, customWidth }) => {
     </>
   );
 };
-
-// Layout.propTypes = {
-//   children: PropTypes.node.isRequired,
-// };
 
 export default Layout;

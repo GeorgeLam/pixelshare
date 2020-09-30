@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-
 import { useHistory } from "react-router-dom";
+
 import Layout from "./Layout";
 import Image from "./components/Image";
 import ImageModal from "./components/ImageModal";
+import Loader from "./components/Loader";
 import { UserContext } from "./Context";
 import "./Layout.module.css";
 
@@ -125,7 +126,9 @@ const UserPage = ({ match }) => {
                 </>
               ))
             ) : (
-              <p>Loading images...</p>
+              <div style={{ position: "absolute", left: "25%", right: "25%" }}>
+                <Loader />
+              </div>
             )}
           </div>
           {/* </Col> */}

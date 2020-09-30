@@ -24,10 +24,10 @@ const Account = () => {
   const [method, setMethod] = useState(true);
 
   return (
-    <Layout>
+    <Layout customWidth={10}>
       <Container>
         <Row>
-          <Col xs={10} md={5} className="mx-auto">
+          <Col xs={12} md={8} lg={5} className="mx-auto">
             {method ? <SignIn /> : <SignUp />}
             <p className="text-center">
               Click{" "}

@@ -36,9 +36,18 @@ var upload = multer({ storage: storage });
 app.post("/photos", function (req, res) {
   // res.sendFile("/index.html", { root: "./server" });
   let query = null;
+  let limitNum = 3;
+  let skipNum = 0;
   if (req.body) {
     console.log(req.body);
-    if (req.body.queryType == "recent") query = {};
+    if (req.body.queryType == "recent") {
+      query = {};
+    }
+    if (req.body.queryType == "moreRecentPhotos") {
+      query = {};
+      limitNum += 3;
+      // skipNum += 5;
+    }
     if (req.body.queryType == "user") query = { author: req.body.author };
     if (req.body.queryType == "single") query = { fileName: req.body.fileName };
 
@@ -50,10 +59,11 @@ app.post("/photos", function (req, res) {
           .collection("photos")
           .find(query)
           .sort({ uploadTime: -1 })
-          .limit(3)
+          .limit(limitNum)
+          .skip(skipNum)
           .toArray()
           .then((docs) => {
-            // console.log(docs);
+            console.log(docs);
             res.send(docs);
           });
         db.close();

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Link } from "react-router-dom";
 import { Card, Button, Form, Modal } from "react-bootstrap/";
 import ImageStyles from "../styles/image.module.css";
 import ImageHeader from "./ImageHeader";
-import ImageContents from "./ImageContents";
+import ImageDetailedBox from "./ImageDetailedBox";
 import { ModalContext } from "../Context";
 
 const ImageModal = (props) => {
@@ -35,7 +35,7 @@ const ImageModal = (props) => {
             borderRadius: 0,
           }}
         >
-          <ImageContents data={props.data} />
+          <ImageDetailedBox data={props.data} />
         </Modal.Body>
       </Modal>
     </div>
