@@ -22,9 +22,9 @@ textarea:focus {
   grid-template-rows: 1fr 1fr 1fr;
   gap: 1px 1px;
   grid-template-areas:
-    ". . . ."
-    ". . . ."
-    ". . . .";
+    ". . . "
+    ". . . "
+    ". . . ";
   width: 100%;
   margin: 0 auto;
 }

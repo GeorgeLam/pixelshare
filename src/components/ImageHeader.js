@@ -63,7 +63,8 @@ const ImageHeader = (props) => {
       <div style={{ flex: 1, display: "flex" }}>
         <Link to={`/user/${props.author}`}>
           <img
-            src={require("./1.jpg")}
+            // src={require("./1.jpg")}
+            src={`https://pixelshare.s3.amazonaws.com/${props.author}`}
             className="rounded-circle mr-3 profilePhoto"
             alt="user's profile picture"
             width="30"

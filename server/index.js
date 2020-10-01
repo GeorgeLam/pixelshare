@@ -48,7 +48,10 @@ app.post("/photos", function (req, res) {
       limitNum += 3;
       // skipNum += 5;
     }
-    if (req.body.queryType == "user") query = { author: req.body.author };
+    if (req.body.queryType == "user") {
+      query = { author: req.body.author };
+      limitNum = 0;
+    }
     if (req.body.queryType == "single") query = { fileName: req.body.fileName };
 
     MongoClient.connect(process.env.DB_Conn, async function (err, db) {
@@ -63,7 +66,7 @@ app.post("/photos", function (req, res) {
           .skip(skipNum)
           .toArray()
           .then((docs) => {
-            console.log(docs);
+            // console.log(docs);
             res.send(docs);
           });
         db.close();
@@ -157,6 +160,12 @@ app.post("/photoUpdate", function (req, res) {
 
 //Route: uploading
 app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
+  if (req.body.type == "profilePhoto") {
+    console.log("ZOZOZddO", req.body);
+    uploadFile(req.file.buffer, req.body.username);
+    return;
+  }
+
   console.log("Node has received something...");
   console.log(req.file);
   // console.log("!!!!!!!!!!!!!!!!!!!", req.body);
@@ -178,7 +187,7 @@ app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
         .toArray()
         .then((docs) => {
           console.log(docs.length);
-          if (docs.length > 5) {
+          if (docs.length > 9) {
             res.send({
               error: `Sorry, you have reached the upload limit. You may only upload nine files.`,
             });
@@ -187,8 +196,8 @@ app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
           console.log("Upload limit hasn't been exceeded, uploading...");
           uploadFile(
             req.file.buffer,
-            fileName,
             req.body.authorName,
+            fileName,
             req.body.caption
           );
           res.send({
@@ -235,10 +244,17 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.SECRET,
 });
 
-const uploadFile = (fileContent, fileName, authorName, caption) => {
+const uploadFile = (fileContent, authorName, fileName, caption) => {
+  console.log("Uploading photo to aws");
+  let profilePhotoUpload;
+
+  if (!fileName) {
+    profilePhotoUpload = true;
+  }
+
   const params = {
     Bucket: process.env.BUCKET,
-    Key: fileName,
+    Key: fileName || authorName,
     Body: fileContent,
     ContentType: "image/jpeg",
   };
@@ -251,6 +267,8 @@ const uploadFile = (fileContent, fileName, authorName, caption) => {
     console.log(data);
     console.log(`File uploaded successfully. ${data.Location}`);
 
+    if (profilePhotoUpload) return;
+    console.log("PP changes shouldn't show this");
     //Uploading file reference (name and upload date) to MongoDB
     MongoClient.connect(process.env.DB_Conn, function (err, db) {
       if (err) throw err;
@@ -272,5 +290,62 @@ const uploadFile = (fileContent, fileName, authorName, caption) => {
     });
   });
 };
+
+app.post("/profile", function (req, res) {
+  console.log(req.body); //WORKS!!
+
+  MongoClient.connect(process.env.DB_Conn, async function (err, db) {
+    if (err) throw err;
+    try {
+      await db
+        .db("Pixelshare")
+        .collection("users")
+        .find({ username: req.body.username })
+        .toArray()
+        .then((docs) => {
+          // console.log(docs);
+          res.send(docs);
+        });
+      db.close();
+    } catch (err) {
+      console.log(err);
+      res.json({ msg: err });
+    }
+  });
+
+  // res.send({ Response: req.body});
+});
+
+app.post("/updateProfile", function (req, res) {
+  console.log("UPDATING PROFILE", req.body);
+
+  MongoClient.connect(process.env.DB_Conn, async function (err, db) {
+    if (err) throw err;
+    try {
+      await db
+        .db("Pixelshare")
+        .collection("users")
+        .findOneAndUpdate(
+          {
+            username: req.body.username,
+          },
+          {
+            $set: { bio: req.body.bio },
+          },
+
+          { returnOriginal: false, upsert: true }
+        )
+        .then((docs) => {
+          // console.log("zzzzz", docs);
+          console.log("Updated!");
+          res.send(docs);
+        });
+      db.close();
+    } catch (err) {
+      console.log("Error!", err);
+      res.json({ msg: err });
+    }
+  });
+});
 
 app.listen(5000, () => console.log("Server started on port 5000"));

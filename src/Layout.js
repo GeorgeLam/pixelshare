@@ -79,17 +79,7 @@ const Layout = ({ children, customWidth }) => {
             <Navbar.Brand href="/">Pixelshare</Navbar.Brand>
           </Row>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Row>
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Form inline>
-                <FormControl
-                  type="text"
-                  placeholder="Search"
-                  className="mr-sm-2"
-                />
-              </Form>
-            </Navbar.Collapse>
-          </Row>
+
           <Row>
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
@@ -109,9 +99,18 @@ const Layout = ({ children, customWidth }) => {
                   >
                     Upload
                   </NavLink>
+                  {username && (
+                    <NavLink
+                      to={`/user/${username?.displayName}`}
+                      className="mr-3"
+                      activeClassName="mr-3 font-weight-bold"
+                    >
+                      {username?.displayName}
+                    </NavLink>
+                  )}
                   {username ? (
                     <Link to="#" onClick={handleLogOut}>
-                      Log out {`(${username?.displayName})`}
+                      Log out
                     </Link>
                   ) : (
                     <NavLink
