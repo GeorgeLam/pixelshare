@@ -9,7 +9,6 @@ import ImageModal from "./components/ImageModal";
 import EditProfileModal from "./components/EditProfileModal";
 import Loader from "./components/Loader";
 import { UserContext } from "./Context";
-import "./Layout.module.css";
 
 import { Container, Row, Col } from "react-bootstrap/";
 
