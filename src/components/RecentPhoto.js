@@ -32,7 +32,7 @@ const RecentPhoto = ({ photo }) => {
       <Card.Body>
         <ImageControls data={photo} />
 
-        <Card.Text>
+        <Card.Text className="mt-1">
           {photo?.caption && <span>{photo?.caption}</span>}
           <ul style={{ margin: 0, padding: 0 }}>
             {commentsArray?.length > 2 && (

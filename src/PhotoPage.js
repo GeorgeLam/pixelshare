@@ -21,7 +21,7 @@ const PhotoPage = ({ match }) => {
 
   useEffect(() => {
     axios
-      .post("http://localhost:5000/photos/", { queryType: "single", fileName })
+      .post("/photos/", { queryType: "single", fileName })
       .then((response) => {
         console.log(response.data);
         setPhoto(response.data[0]);

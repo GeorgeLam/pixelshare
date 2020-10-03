@@ -7,7 +7,7 @@ const Upload = () => {
   return (
     <Layout pageTitle="Upload">
       <div>
-        <div className="container mt-3">
+        <div className="container mt-5 pt-1">
           <div className="">
             <Uploader />
           </div>
