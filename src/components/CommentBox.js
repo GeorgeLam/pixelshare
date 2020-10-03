@@ -26,7 +26,7 @@ const CommentBox = (props) => {
     console.log(commentRef.current.value);
 
     axios
-      .post("http://localhost:5000/photoUpdate/", {
+      .post("/photoUpdate/", {
         queryType: "comment",
         commentValue: commentRef.current.value,
         fileName: props.data.fileName,

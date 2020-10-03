@@ -6,7 +6,7 @@ import { Container, Row, Col } from "react-bootstrap/";
 
 const Home = () => {
   return (
-    <Layout customWidth={4}>
+    <Layout pageTitle="Home" customWidth={4}>
       <Container>
         <Row>
           <Col xs={12} className="mx-auto">
@@ -14,7 +14,6 @@ const Home = () => {
           </Col>
         </Row>
       </Container>
-      <Row />
     </Layout>
   );
 };

@@ -37,7 +37,7 @@ const EditProfileModal = (props) => {
     // }
 
     axios
-      .post("http://localhost:5000/updateProfile", data)
+      .post("/updateProfile", data)
       .then((response) => {
         // console.log("epm", response.data);
         console.log("epm", response.data);

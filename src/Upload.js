@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import "react-image-crop/dist/ReactCrop.css";
-import Layout from "../Layout";
-import Uploader from "./Uploader";
+import Layout from "./Layout";
+import Uploader from "./components/Uploader";
 
 const Upload = () => {
   return (
-    <Layout>
+    <Layout pageTitle="Upload">
       <div>
         <div className="container mt-3">
           <div className="">

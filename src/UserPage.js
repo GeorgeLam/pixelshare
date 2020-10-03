@@ -31,7 +31,7 @@ const UserPage = ({ match }) => {
 
   useEffect(() => {
     axios
-      .post(`http://localhost:5000/photos/`, {
+      .post(`/photos/`, {
         queryType: "user",
         author: userID,
       })
@@ -43,7 +43,7 @@ const UserPage = ({ match }) => {
         console.log(error);
       });
     axios
-      .post(`http://localhost:5000/profile/`, {
+      .post(`/profile/`, {
         // queryType: "user",
         username: userID,
       })
@@ -67,7 +67,7 @@ const UserPage = ({ match }) => {
   };
 
   return (
-    <Layout>
+    <Layout pageTitle={userID}>
       {/* <p>Hello, {state.user}</p> */}
       <EditProfileModal
         show={profileModalShow}

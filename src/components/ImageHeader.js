@@ -22,7 +22,7 @@ const ImageHeader = (props) => {
     console.log("Deleting", commentTime, author);
 
     axios
-      .post("http://localhost:5000/photoUpdate/", {
+      .post("/photoUpdate/", {
         queryType: "commentDelete",
         fileName: props.fileName, ///////////////////
         commentTime: commentTime,
@@ -41,7 +41,7 @@ const ImageHeader = (props) => {
     console.log("Deleting", fileName);
 
     axios
-      .post("http://localhost:5000/photoUpdate/", {
+      .post("/photoUpdate/", {
         queryType: "photoDelete",
         fileName: fileName,
       })

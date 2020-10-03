@@ -166,18 +166,16 @@ app.post("/photoUpdate", function (req, res) {
 //Route: uploading
 app.post("/api", upload.single("imageUpload"), async function (req, res, next) {
   if (req.body.type == "profilePhoto") {
-    console.log("ZOZOZddO", req.body);
+    console.log("Receiving image upload: ", req.body);
     uploadFile(req.file.buffer, req.body.username);
+    console.log("Done");
+    res.send("success");
     return;
   }
 
   console.log("Node has received something...");
   console.log(req.file);
-  // console.log("!!!!!!!!!!!!!!!!!!!", req.body);
-  // console.log(req.body.authorName);
   let fileName = Date.now() + req.file.originalname;
-  // let authorName = "example";
-  // res.send({ Response: "Received by node" });
 
   //Checking that user has not exceeded upload limits:
 
@@ -272,7 +270,8 @@ const uploadFile = (fileContent, authorName, fileName, caption) => {
     console.log(data);
     console.log(`File uploaded successfully. ${data.Location}`);
 
-    if (profilePhotoUpload) return;
+    if (profilePhotoUpload)
+      return { success: `File uploaded successfully. ${data.Location}` };
     console.log("PP changes shouldn't show this");
     //Uploading file reference (name and upload date) to MongoDB
     MongoClient.connect(process.env.DB_Conn, function (err, db) {

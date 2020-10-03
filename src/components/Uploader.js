@@ -8,7 +8,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import Layout from "../Layout";
 import { UserContext } from "../Context";
 
-const Uploader = ({ type, setProfilePhotoChanged }) => {
+const Uploader = ({ type }) => {
   const [state, setState] = useContext(UserContext);
   let history = useHistory();
   const captionRef = useRef(null);
@@ -63,7 +63,7 @@ const Uploader = ({ type, setProfilePhotoChanged }) => {
     //   : "http://localhost:5000/api";
 
     axios
-      .post("http://localhost:5000/api", data, {
+      .post("/api", data, {
         headers: {
           encType: "multipart/form-data",
           "Content-Type": "application/x-www-form-urlencoded",
@@ -72,15 +72,15 @@ const Uploader = ({ type, setProfilePhotoChanged }) => {
       })
       .then((response) => {
         console.log(response);
-        if (type && response) {
-          setProfilePhotoChanged(true);
+        if (type) {
+          alert("Profile photo will take around a minute to update");
         }
         if ("error" in response?.data) {
           alert(response.data.error);
           if (!type) history.push("/");
           return;
         }
-        if ("success" in response?.data) {
+        if ("success" in response?.data && !type) {
           setTimeout(() => {
             setLoaded(response.data.location);
             alert("Image uploaded!");
@@ -220,7 +220,7 @@ const Uploader = ({ type, setProfilePhotoChanged }) => {
               onSubmit={handleUpload}
             >
               <div className="form-group files">
-                <label onClick={upload}>Upload Your File (max: 400kb)</label>
+                <label>Upload Your File (max: 400kb)</label>
                 <input
                   type="file"
                   className="form-control"

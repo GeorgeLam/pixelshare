@@ -9,15 +9,11 @@ import {
   NavLink,
   useHistory,
 } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 import { auth, firestore } from "./firebase";
 import { UserContext } from "./Context";
 
-// import { Helmet } from "react-helmet";
-
-// import Header from "./header";
-// import LayoutStyles from "./Layout.module.css";
-// import "../styles/blog.module.css"
 import {
   Container,
   Navbar,
@@ -29,7 +25,7 @@ import {
   Col,
 } from "react-bootstrap/";
 
-const Layout = ({ children, customWidth }) => {
+const Layout = ({ pageTitle, children, customWidth }) => {
   let history = useHistory();
 
   const [username, setUsername] = useState(null);
@@ -70,9 +66,12 @@ const Layout = ({ children, customWidth }) => {
 
   return (
     <>
-      {/* <Helmet title="Better Latte Coffee" defer={false} /> */}
-      <Navbar bg="light" expand="lg" fixed="top">
-        <Container style={{ width: "70%" }}>
+      <Helmet
+        title={pageTitle ? `Pixelshare | ${pageTitle}` : `Pixelshare`}
+        defer={false}
+      />
+      <Navbar bg="light" expand="md" fixed="top">
+        <Container style={{ width: "80%" }}>
           {/* <Row>
             <Col> */}
           <Row>
@@ -80,50 +79,47 @@ const Layout = ({ children, customWidth }) => {
           </Row>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-          <Row>
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <Row>
+          {/* <Row> */}
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ml-auto">
+              <Row>
+                <NavLink
+                  to="/"
+                  exact
+                  className="mr-2 mr-md-3"
+                  activeClassName="mr-2 mr-md-3 font-weight-bold"
+                >
+                  Home
+                </NavLink>
+                <NavLink
+                  to="/upload"
+                  className="mr-2 mr-md-3"
+                  activeClassName="mr-2 mr-md-3 font-weight-bold"
+                >
+                  Upload
+                </NavLink>
+                {username && (
                   <NavLink
-                    to="/"
-                    exact
-                    className="mr-3"
-                    activeClassName="mr-3 font-weight-bold"
+                    to={`/user/${username?.displayName}`}
+                    className="mr-2 mr-md-3"
+                    activeClassName="mr-2 mr-md-3 font-weight-bold"
                   >
-                    Home
+                    {username?.displayName}
                   </NavLink>
-                  <NavLink
-                    to="/upload"
-                    className="mr-3"
-                    activeClassName="mr-3 font-weight-bold"
-                  >
-                    Upload
+                )}
+                {username ? (
+                  <Link to="#" onClick={handleLogOut}>
+                    Log out
+                  </Link>
+                ) : (
+                  <NavLink to="/login" activeClassName="font-weight-bold">
+                    Login
                   </NavLink>
-                  {username && (
-                    <NavLink
-                      to={`/user/${username?.displayName}`}
-                      className="mr-3"
-                      activeClassName="mr-3 font-weight-bold"
-                    >
-                      {username?.displayName}
-                    </NavLink>
-                  )}
-                  {username ? (
-                    <Link to="#" onClick={handleLogOut}>
-                      Log out
-                    </Link>
-                  ) : (
-                    <NavLink
-                      to="/login"
-                      activeClassName="mr-3 font-weight-bold"
-                    >
-                      Login
-                    </NavLink>
-                  )}
-                </Row>
-              </Nav>
-            </Navbar.Collapse>
-          </Row>
+                )}
+              </Row>
+            </Nav>
+          </Navbar.Collapse>
+          {/* </Row> */}
           {/* </Col>
           </Row> */}
         </Container>
@@ -133,11 +129,11 @@ const Layout = ({ children, customWidth }) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          minHeight: "calc(100vh - 22px)",
+          minHeight: "calc(100vh)",
         }}
       >
         <div style={{ flex: 1 }}>
-          <Row className="h-100">
+          <div className="h-100">
             <Col
               xs={12}
               md={11}
@@ -147,10 +143,10 @@ const Layout = ({ children, customWidth }) => {
             >
               {children}
             </Col>
-          </Row>
+          </div>
         </div>
 
-        <Navbar bg="light">
+        <Navbar className="mt-3" bg="light">
           <Container>
             <Row className="mx-auto">
               <Col>

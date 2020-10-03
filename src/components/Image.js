@@ -18,7 +18,7 @@ const Image = () => {
 
   useEffect(() => {
     axios
-      .post("http://localhost:5000/photos", { queryType: query })
+      .post("/photos", { queryType: query })
       .then((response) => {
         console.log(response.data);
         setRecentPhotos(response.data);

@@ -37,7 +37,7 @@ const ImageControls = (props) => {
     // likeRef.current.span.outerHTML = `<span>Liked by <strong>${state.user}</strong>`;
 
     axios
-      .post("http://localhost:5000/photoUpdate/", {
+      .post("/photoUpdate/", {
         queryType: "like",
         fileName: props.data.fileName,
         currentUser: state.user,
