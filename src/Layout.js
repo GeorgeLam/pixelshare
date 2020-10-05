@@ -160,4 +160,4 @@ const Layout = ({ pageTitle, children, customWidth }) => {
   );
 };
 
-export default Layout;
+export default React.memo(Layout);

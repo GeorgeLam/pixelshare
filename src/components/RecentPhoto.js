@@ -80,4 +80,4 @@ const RecentPhoto = ({ photo }) => {
   );
 };
 
-export default RecentPhoto;
+export default React.memo(RecentPhoto);

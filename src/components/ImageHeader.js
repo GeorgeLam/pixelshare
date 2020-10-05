@@ -128,4 +128,4 @@ const ImageHeader = (props) => {
   );
 };
 
-export default ImageHeader;
+export default React.memo(ImageHeader);

@@ -160,26 +160,7 @@ const Uploader = ({ type }) => {
     canvas.toBlob((blob) => {
       console.log(blob);
       setCroppedImage(blob);
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        // dataURLtoFile(reader.result, "c.jpg");
-      };
     });
-  };
-
-  const dataURLtoFile = (dataurl, filename) => {
-    let arr = dataurl.split(","),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    let croppedImage = new File([u8arr], filename, { type: mime });
-    setCroppedImage(croppedImage);
-    console.log("nci", croppedImage);
   };
 
   //Image crop functions end
@@ -201,12 +182,6 @@ const Uploader = ({ type }) => {
             />
           </>
         )}
-        {/* {croppedImage && (
-                <>
-                  <p>Hi</p>
-                  <img src={croppedImage}></img>
-                </>
-              )} */}
       </div>
 
       <div className="col text-center">

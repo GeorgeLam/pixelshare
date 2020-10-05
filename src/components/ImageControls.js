@@ -84,4 +84,4 @@ const ImageControls = (props) => {
   );
 };
 
-export default ImageControls;
+export default React.memo(ImageControls);

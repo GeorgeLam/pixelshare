@@ -26,6 +26,7 @@ const UserPage = ({ match }) => {
   const [data, setData] = useState();
 
   const [profileModalShow, setProfileModalShow] = useState(false);
+
   // const recentPhotos = ["../img/1.jpg"];
   // console.log("rrr", useContext(UserContext));
 
@@ -143,7 +144,6 @@ const UserPage = ({ match }) => {
                         }
                         // setShow(1);
                         setData(recentPhotos[i]);
-                        console.log("Hi");
                       }}
                       className=" img-responsive full-width "
                       src={`https://pixelshare.s3.amazonaws.com/${photo.fileName}`}
@@ -173,4 +173,4 @@ const UserPage = ({ match }) => {
   );
 };
 
-export default UserPage;
+export default React.memo(UserPage);

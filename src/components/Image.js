@@ -9,6 +9,7 @@ import Loader from "./Loader";
 import ImageStyles from "../styles/image.module.css";
 
 const Image = () => {
+  console.log("IMAGE COMP RENDERING");
   const [showImageCount, setShowImageCount] = useState(3);
   const aws = "https://pixelshare.s3.eu-west-2.amazonaws.com/";
   const [recentPhotos, setRecentPhotos] = useState();
@@ -56,4 +57,4 @@ const Image = () => {
   );
 };
 
-export default Image;
+export default React.memo(Image);
