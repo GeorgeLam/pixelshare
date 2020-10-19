@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { auth, firebase } from "../firebase";
 import { useHistory } from "react-router-dom";
+import Swal from 'sweetalert2'
 
 import { Card, Button, Form } from "react-bootstrap/";
 import ImageStyles from "../styles/image.module.css";
@@ -45,25 +46,39 @@ const SignUp = () => {
   };
   const handleSignUp = () => {
     if (password !== passwordConfirm) {
-      alert("Passwords do not match!");
+      // alert("Passwords do not match!");
+      Swal.fire({
+          icon: 'error',
+          title: 'Passwords do not match!',
+          // text: response.data.error,
+        })
       return;
     }
-    const details = { email, password, passwordConfirm };
-    // console.log(details);
     console.log("Signing up...", email, password);
-    // axios
-    //   .post("http://localhost:5000/signup", details)
-    //   .then(function (response) {
-    //     console.log(response.data);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
   };
 
   const signUp = () => {
+    if (email?.length < 6 || password?.length < 6){
+      Swal.fire({
+          icon: 'error',
+          title: 'Log in details are not strong enough',
+          // text: response.data.error,
+        });
+        return;
+    }
+    if(password != passwordConfirm){
+        Swal.fire({
+          icon: 'error',
+          title: 'Passwords do not match',
+          // text: response.data.error,
+        });
+        return;
+    }
     auth
       .createUserWithEmailAndPassword(email, password)
+      .catch(function(error) {
+         console.log("AAAAA", error)
+      })
       .then((res) => {
         return auth.currentUser.updateProfile({
           displayName: username,
@@ -73,7 +88,26 @@ const SignUp = () => {
         console.log("Logged in...");
         history.push("/");
       })
-      .catch(function (error) {
+       .catch(function(error) {
+         console.log("AAAAA", error)
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode == 'auth/weak-password') {
+          // alert('The password is too weak.');
+          Swal.fire({
+          icon: 'error',
+          title: 'Password is too weak',
+          // text: response.data.error,
+        })
+        } else {
+          alert(errorMessage);
+          Swal.fire({
+          icon: 'error',
+          title: 'Error...',
+          text: errorMessage,
+        })
+        }
         console.log(error);
       });
   };

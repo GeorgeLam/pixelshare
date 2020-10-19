@@ -6,6 +6,7 @@ import { UserContext } from "../Context";
 // import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import Swal from 'sweetalert2'
 
 import ImageStyles from "../styles/image.module.css";
 
@@ -48,7 +49,12 @@ const ImageHeader = (props) => {
       .then((response) => {
         console.log(response.data);
         if (response.data.deletedCount) {
-          alert("Photo has been deleted!");
+          // alert("Photo has been deleted!");
+          Swal.fire(
+          'Profile has been deleted!',
+          'Redirecting to homepage...',
+          'success'
+        )
           history.push("/");
         }
         // setCommentsArray(response.data.comments);

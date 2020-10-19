@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Button } from "react-bootstrap/";
@@ -20,16 +20,18 @@ const UserPage = ({ match }) => {
   } = match;
 
   // const aws = "https://pixelshare.s3.eu-west-2.amazonaws.com/";
+  const [profilePhoto, setProfilePhoto] = useState(`https://pixelshare.s3.amazonaws.com/${userID}`);
   const [profileData, setProfileData] = useState();
   const [recentPhotos, setRecentPhotos] = useState();
   const [show, setShow] = useState(false);
   const [data, setData] = useState();
+  const ppRef = useRef(null);
 
   const [profileModalShow, setProfileModalShow] = useState(false);
 
   // const recentPhotos = ["../img/1.jpg"];
   // console.log("rrr", useContext(UserContext));
-
+  
   useEffect(() => {
     axios
       .post(`/photos/`, {
@@ -67,6 +69,16 @@ const UserPage = ({ match }) => {
     console.log("Opening profile modal");
   };
 
+  useEffect(() => {
+    console.log(ppRef);
+    console.log(ppRef.current.offsetWidth);
+    if(ppRef.current = null){
+      // setProfilePhoto('https://pixelshare.s3.amazonaws.com/SeaNanners')
+    };
+  }
+    , [ppRef])
+  
+
   return (
     <Layout pageTitle={userID}>
       {/* <p>Hello, {state.user}</p> */}
@@ -95,9 +107,11 @@ const UserPage = ({ match }) => {
         >
           <Col xs={3} className="mx-auto mt-5">
             <img
-              src={`https://pixelshare.s3.amazonaws.com/${userID}`}
+              src={profilePhoto}
               alt="User's profile photo"
               className="rounded-circle"
+              ref={ppRef}
+
               style={{ height: "80px", width: "80px" }}
             ></img>
           </Col>

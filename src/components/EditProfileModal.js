@@ -99,4 +99,5 @@ const EditProfileModal = (props) => {
   );
 };
 
-export default EditProfileModal;
+export default React.memo(EditProfileModal);
+

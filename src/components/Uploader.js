@@ -4,6 +4,7 @@ import axios from "axios";
 import { auth, firestore } from "../firebase";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import Swal from 'sweetalert2'
 
 import Layout from "../Layout";
 import { UserContext } from "../Context";
@@ -25,7 +26,12 @@ const Uploader = ({ type }) => {
     console.log(e.target.files);
     if (e?.target?.files[0]?.type?.slice(0, 5) !== "image") {
       setAcceptableFile(0);
-      alert("File type unsupported - please only upload images");
+      // alert("File type unsupported - please only upload images");
+      Swal.fire({
+        icon: 'error',
+        title: 'File type unsupported',
+        text: 'Please only upload images',
+      })
       return;
     } else {
       console.log(window.URL.createObjectURL(e.target.files[0]));
@@ -44,7 +50,12 @@ const Uploader = ({ type }) => {
     console.log(croppedImage);
 
     if (croppedImage.size > 400000) {
-      alert("File too large - please select images under 400kb");
+      // alert("File too large - please select images under 400kb");
+      Swal.fire({
+      icon: 'error',
+      title: 'File is too large',
+      text: 'Please ensure cropped image is below 400kb',
+    })
       return;
     }
 
@@ -73,17 +84,32 @@ const Uploader = ({ type }) => {
       .then((response) => {
         console.log(response);
         if (type) {
-          alert("Profile photo will take around a minute to update");
+          // alert("Profile photo will take around a minute to update");
+          Swal.fire(
+          'Profile photo uploaded',
+          'It will take a few minutes to update...',
+          'success'
+        )
         }
         if ("error" in response?.data) {
-          alert(response.data.error);
+          // alert(response.data.error);
+          Swal.fire({
+          icon: 'error',
+          title: 'Error...',
+          text: response.data.error,
+        })
           if (!type) history.push("/");
           return;
         }
         if ("success" in response?.data && !type) {
           setTimeout(() => {
             setLoaded(response.data.location);
-            alert("Image uploaded!");
+            // alert("Image uploaded!");
+            Swal.fire(
+            'Image uploaded!',
+            'Redirecting to homepage...',
+            'success'
+          )
             if (!type) history.push("/");
           }, 1000);
         }
